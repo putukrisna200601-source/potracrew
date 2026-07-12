@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="google" content="notranslate">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="view-transition" content="same-origin">
+    <title>Penilaian Interview - PotraCrew Admin</title>
+    <meta name="description" content="Form penilaian interview kandidat PotraCrew — input nilai per kriteria untuk proses perhitungan SAW.">
+
+    <!-- Favicon -->
+    <link rel="icon" href="../assets/img/logo.png" type="image/png">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,400;0,14..32,500;0,14..32,600;0,14..32,700;0,14..32,800;1,14..32,400&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Bootstrap Grid + Utilities -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap-grid.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap-utilities.min.css" rel="stylesheet">
+
+    <!-- Design System -->
+    <link rel="stylesheet" href="../assets/css/admin.css">
+
+    <style>
+        /* ══════════════════════════════════════════════════
+           PENILAIAN INTERVIEW — Page-specific styles
+        ══════════════════════════════════════════════════ */
+
+        /* Candidate Summary Strip */
+        .cand-summary-strip {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 1rem 2rem;
+            padding: 1.125rem 1.5rem;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+        .cand-summary-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            color: #1d4ed8;
+            font-weight: 700;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .cand-summary-info { flex: 1; min-width: 160px; }
+        .cand-summary-name { font-weight: 700; font-size: 1rem; color: var(--foreground); line-height: 1.2; }
+        .cand-summary-role { font-size: 0.8rem; color: var(--muted-foreground); margin-top: 2px; }
+        .cand-summary-metas {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem 1.5rem;
+            align-items: center;
+        }
+        .cand-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.375rem;
+            font-size: 0.8125rem;
+            color: var(--muted-foreground);
+        }
+        .cand-meta-item i { font-size: 0.7rem; opacity: 0.6; }
+        .cand-meta-item strong { color: var(--foreground); font-weight: 600; }
+
+        /* ── Evaluation Layout ── */
+        .eval-layout {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 1.5rem;
+            align-items: start;
+        }
+        @media (max-width: 1024px) {
+            .eval-layout { grid-template-columns: 1fr; }
+        }
+
+        /* ── Progress Bar ── */
+        .eval-progress-bar-wrap {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 0.25rem;
+        }
+        .eval-progress-track {
+            flex: 1;
+            height: 6px;
+            background: var(--secondary);
+            border-radius: 999px;
+            overflow: hidden;
+        }
+        .eval-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary) 0%, #60a5fa 100%);
+            border-radius: 999px;
+            width: 0%;
+            transition: width 0.4s cubic-bezier(0.16,1,0.3,1);
+        }
+        .eval-progress-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--primary);
+            white-space: nowrap;
+            min-width: 40px;
+            text-align: right;
+        }
+
+        /* ── Criteria Card ── */
+        .criteria-card {
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius);
+            background: white;
+            padding: 1.25rem 1.5rem;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            position: relative;
+        }
+        .criteria-card.is-rated {
+            border-color: rgba(0,113,227,0.25);
+            box-shadow: 0 0 0 3px rgba(0,113,227,0.06);
+        }
+        .criteria-card-header {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        .criteria-number {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: var(--secondary);
+            color: var(--muted-foreground);
+            font-size: 0.75rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+        .criteria-card.is-rated .criteria-number {
+            background: rgba(0,113,227,0.12);
+            color: var(--primary);
+        }
+        .criteria-name {
+            font-size: 0.9375rem;
+            font-weight: 600;
+            color: var(--foreground);
+            flex: 1;
+        }
+        .criteria-check {
+            opacity: 0;
+            color: var(--primary);
+            font-size: 0.875rem;
+            transition: opacity 0.25s ease, transform 0.25s cubic-bezier(0.16,1,0.3,1);
+            transform: scale(0.5);
+        }
+        .criteria-card.is-rated .criteria-check {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* ── Rating Selector ── */
+        .rating-selector {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .rating-option { position: relative; }
+        .rating-option input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .rating-pill {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 72px;
+            padding: 0.625rem 0.5rem;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.16,1,0.3,1);
+            background: white;
+            gap: 0.25rem;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        .rating-pill:hover {
+            border-color: rgba(0,113,227,0.4);
+            background: rgba(0,113,227,0.03);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,113,227,0.1);
+        }
+        .rating-pill .pill-score {
+            font-size: 1.125rem;
+            font-weight: 800;
+            color: var(--muted-foreground);
+            line-height: 1;
+            transition: color 0.2s ease;
+        }
+        .rating-pill .pill-label {
+            font-size: 0.625rem;
+            font-weight: 600;
+            color: var(--muted-foreground);
+            text-align: center;
+            line-height: 1.2;
+            transition: color 0.2s ease;
+        }
+        /* Active (selected) state */
+        .rating-option input[type="radio"]:checked + .rating-pill {
+            border-color: var(--primary);
+            background: rgba(0,113,227,0.08);
+            box-shadow: 0 0 0 3px rgba(0,113,227,0.12);
+            transform: translateY(-2px) scale(1.04);
+        }
+        .rating-option input[type="radio"]:checked + .rating-pill .pill-score { color: var(--primary); }
+        .rating-option input[type="radio"]:checked + .rating-pill .pill-label  { color: var(--primary); }
+
+        /* Score color coding per value */
+        .rating-option:nth-child(1) input:checked + .rating-pill { border-color:#ef4444; background:rgba(239,68,68,0.07); box-shadow:0 0 0 3px rgba(239,68,68,0.1); }
+        .rating-option:nth-child(1) input:checked + .rating-pill .pill-score,
+        .rating-option:nth-child(1) input:checked + .rating-pill .pill-label { color:#ef4444; }
+        .rating-option:nth-child(2) input:checked + .rating-pill { border-color:#f97316; background:rgba(249,115,22,0.07); box-shadow:0 0 0 3px rgba(249,115,22,0.1); }
+        .rating-option:nth-child(2) input:checked + .rating-pill .pill-score,
+        .rating-option:nth-child(2) input:checked + .rating-pill .pill-label { color:#f97316; }
+        .rating-option:nth-child(3) input:checked + .rating-pill { border-color:#eab308; background:rgba(234,179,8,0.07); box-shadow:0 0 0 3px rgba(234,179,8,0.1); }
+        .rating-option:nth-child(3) input:checked + .rating-pill .pill-score,
+        .rating-option:nth-child(3) input:checked + .rating-pill .pill-label { color:#ca8a04; }
+        .rating-option:nth-child(4) input:checked + .rating-pill { border-color:#22c55e; background:rgba(34,197,94,0.07); box-shadow:0 0 0 3px rgba(34,197,94,0.1); }
+        .rating-option:nth-child(4) input:checked + .rating-pill .pill-score,
+        .rating-option:nth-child(4) input:checked + .rating-pill .pill-label { color:#16a34a; }
+        .rating-option:nth-child(5) input:checked + .rating-pill { border-color:var(--primary); background:rgba(0,113,227,0.08); box-shadow:0 0 0 3px rgba(0,113,227,0.12); }
+        .rating-option:nth-child(5) input:checked + .rating-pill .pill-score,
+        .rating-option:nth-child(5) input:checked + .rating-pill .pill-label { color:var(--primary); }
+
+        /* Focus-visible ring for keyboard nav */
+        .rating-option input[type="radio"]:focus-visible + .rating-pill {
+            outline: 2px solid var(--primary);
+            outline-offset: 2px;
+        }
+
+        @media (max-width: 480px) {
+            .rating-selector { gap: 0.375rem; }
+            .rating-pill { width: calc(20% - 0.3rem); padding: 0.5rem 0.25rem; }
+            .rating-pill .pill-score { font-size: 1rem; }
+            .rating-pill .pill-label { font-size: 0.55rem; }
+        }
+
+        /* ── Catatan Textarea ── */
+        .eval-notes-textarea {
+            width: 100%;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 0.75rem 1rem;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.875rem;
+            color: var(--foreground);
+            resize: vertical;
+            min-height: 100px;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            background: white;
+        }
+        .eval-notes-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(0,113,227,0.1);
+        }
+        .field-label {
+            display: block;
+            font-size: 0.8125rem;
+            font-weight: 600;
+            color: var(--foreground);
+            margin-bottom: 0.5rem;
+        }
+        .field-hint {
+            font-size: 0.75rem;
+            color: var(--muted-foreground);
+            margin-top: 0.375rem;
+        }
+
+        /* ── Submit Button ── */
+        .btn-submit-eval {
+            width: 100%;
+            padding: 0.875rem 1.5rem;
+            border-radius: var(--radius);
+            border: none;
+            background: var(--primary);
+            color: white;
+            font-size: 0.9375rem;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.625rem;
+            transition: all 0.2s cubic-bezier(0.16,1,0.3,1);
+            letter-spacing: -0.01em;
+        }
+        .btn-submit-eval:hover:not(:disabled) {
+            background: #005BB5;
+            box-shadow: 0 4px 16px rgba(0,113,227,0.3);
+            transform: translateY(-1px);
+        }
+        .btn-submit-eval:active:not(:disabled) { transform: translateY(0); }
+        .btn-submit-eval:disabled {
+            opacity: 0.55;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .btn-submit-eval .btn-spinner {
+            display: none;
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255,255,255,0.35);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+        .btn-submit-eval.loading .btn-spinner { display: block; }
+        .btn-submit-eval.loading .btn-text { display: none; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ── Sidebar: Summary Card ── */
+        .eval-sidebar { position: sticky; top: calc(var(--topbar-h, 64px) + 1.5rem); }
+        .sidebar-summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border);
+            gap: 0.75rem;
+        }
+        .sidebar-summary-row:last-child { border-bottom: none; padding-bottom: 0; }
+        .sidebar-summary-row:first-child { padding-top: 0; }
+        .ss-label { font-size: 0.75rem; color: var(--muted-foreground); font-weight: 500; }
+        .ss-value { font-size: 0.8125rem; color: var(--foreground); font-weight: 600; text-align: right; }
+
+        /* Sidebar Progress Rings */
+        .criteria-progress-list { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.25rem; }
+        .cpl-item {
+            display: flex;
+            align-items: center;
+            gap: 0.625rem;
+            font-size: 0.75rem;
+            color: var(--muted-foreground);
+            transition: color 0.2s ease;
+        }
+        .cpl-item.done { color: var(--foreground); }
+        .cpl-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--border);
+            flex-shrink: 0;
+            transition: background 0.25s ease, transform 0.25s cubic-bezier(0.16,1,0.3,1);
+        }
+        .cpl-item.done .cpl-dot {
+            background: #22c55e;
+            transform: scale(1.25);
+        }
+        .cpl-score-chip {
+            margin-left: auto;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 1px 7px;
+            border-radius: 999px;
+            background: var(--secondary);
+            color: var(--muted-foreground);
+            transition: all 0.2s ease;
+        }
+        .cpl-item.done .cpl-score-chip {
+            background: rgba(0,113,227,0.1);
+            color: var(--primary);
+        }
+
+        /* ── Success State ── */
+        .eval-success-overlay {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 3rem 2rem;
+            gap: 1rem;
+        }
+        .eval-success-overlay.visible { display: flex; }
+        .success-icon-ring {
+            width: 72px;
+            height: 72px;
+            border-radius: 50%;
+            background: rgba(34,197,94,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: #16a34a;
+            animation: pop-in 0.5s cubic-bezier(0.16,1,0.3,1) forwards;
+        }
+        @keyframes pop-in {
+            0%   { transform: scale(0); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .success-title { font-size: 1.125rem; font-weight: 700; color: var(--foreground); margin: 0; }
+        .success-sub   { font-size: 0.875rem; color: var(--muted-foreground); margin: 0; max-width: 320px; }
+
+        /* ── Toast Notification ── */
+        .toast-container {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            pointer-events: none;
+        }
+        .toast-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.875rem;
+            padding: 1rem 1.25rem;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+            min-width: 280px;
+            max-width: 360px;
+            pointer-events: all;
+            transform: translateX(120%);
+            transition: transform 0.4s cubic-bezier(0.16,1,0.3,1), opacity 0.3s ease;
+            opacity: 0;
+        }
+        .toast-item.show { transform: translateX(0); opacity: 1; }
+        .toast-item.hide { transform: translateX(120%); opacity: 0; }
+        .toast-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .toast-icon.success { background: rgba(34,197,94,0.1); color: #16a34a; font-size: 1rem; }
+        .toast-title { font-size: 0.875rem; font-weight: 700; color: var(--foreground); }
+        .toast-message { font-size: 0.8rem; color: var(--muted-foreground); margin-top: 2px; }
+        .toast-close {
+            margin-left: auto;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--muted-foreground);
+            padding: 2px;
+            font-size: 0.75rem;
+            opacity: 0.6;
+            transition: opacity 0.2s;
+            align-self: flex-start;
+        }
+        .toast-close:hover { opacity: 1; }
+
+        /* ── Status Badge – Penilaian Selesai ── */
+        .s-badge-evaluated {
+            background: rgba(139,92,246,0.1);
+            color: #7c3aed;
+        }
+        .bg-evaluated { background: #7c3aed; }
+
+        /* ── Form Lock Overlay ── */
+        .form-locked-notice {
+            display: none;
+            align-items: center;
+            gap: 0.75rem;
+            background: rgba(34,197,94,0.06);
+            border: 1px solid rgba(34,197,94,0.2);
+            border-radius: var(--radius-sm);
+            padding: 0.875rem 1rem;
+            color: #15803d;
+            font-size: 0.875rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+        }
+        .form-locked-notice.visible { display: flex; }
+
+        /* ── Responsive tweaks ── */
+        @media (max-width: 576px) {
+            .cand-summary-strip { flex-direction: column; align-items: flex-start; }
+            .cand-summary-metas { flex-direction: column; gap: 0.375rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="admin-layout">
+    <!-- Mesh Background -->
+    <div class="mesh-bg">
+        <div class="bg-shape shape-1"></div>
+        <div class="bg-shape shape-2"></div>
+        <div class="bg-shape shape-3"></div>
+    </div>
+    <div id="sidebarOverlay" class="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 z-3 d-none"></div>
+
+    <!-- ── Sidebar ── -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="#" class="sidebar-logo">
+                <img src="../assets/img/logo.png" alt="PotraCrew Logo">
+                Potra<span>Crew</span>
+            </a>
+        </div>
+        <div class="sidebar-content">
+            <div class="sidebar-section-title">Rekrutmen</div>
+            <a href="index.html" class="sidebar-nav-item"><i class="fa-solid fa-house"></i> Dashboard</a>
+            <a href="data_pelamar.html" class="sidebar-nav-item"><i class="fa-solid fa-users"></i> Data Pelamar</a>
+            <a href="penilaian.html" class="sidebar-nav-item"><i class="fa-solid fa-clipboard-user"></i> Penilaian Wawancara</a>
+            <div class="sidebar-section-title">Sistem Penunjang Keputusan (SAW)</div>
+            <a href="master_kriteria.html" class="sidebar-nav-item"><i class="fa-solid fa-layer-group"></i> Kriteria & Bobot</a>
+            <a href="perhitungan.html" class="sidebar-nav-item"><i class="fa-solid fa-calculator"></i> Perhitungan SAW</a>
+            <a href="keputusan.html" class="sidebar-nav-item"><i class="fa-solid fa-medal"></i> Keputusan Rekrutmen</a>
+        </div>
+        <div class="sidebar-footer">
+<a href="login.html" class="sidebar-nav-item text-danger"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</a>
+        </div>
+    </aside>
+
+    <!-- ── Main Wrapper ── -->
+    <main class="main-wrapper">
+        <!-- Topbar -->
+        <header class="topbar">
+            <div class="d-flex align-items-center gap-3">
+                <button class="icon-btn mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle Mobile Menu">
+                    <i class="fa-solid fa-bars" aria-hidden="true"></i>
+                </button>
+                <nav class="breadcrumb-nav d-none d-md-flex" aria-label="Breadcrumb">
+                    <span class="text-muted">PotraCrew</span>
+                    <i class="fa-solid fa-chevron-right text-xs opacity-50"></i>
+                    <a href="penilaian.html" class="text-muted text-decoration-none">Penilaian Wawancara</a>
+                    <i class="fa-solid fa-chevron-right text-xs opacity-50"></i>
+                    <span class="current">Penilaian Interview</span>
+                </nav>
+            </div>
+            <div class="topbar-actions">
+
+                <div class="profile-avatar" title="Administrator">A</div>
+            </div>
+        </header>
+
+        <!-- Content Area -->
+        <div class="content-area">
+
+            <!-- Page Header -->
+            <div class="page-header d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                <div>
+                    <h1 class="page-title">Penilaian Interview</h1>
+                    <p class="page-description">Berikan nilai berdasarkan hasil observasi dan wawancara. Nilai digunakan pada proses perhitungan SAW.</p>
+                </div>
+                <div>
+                    <a href="penilaian.html" class="s-btn s-btn-outline">
+                        <i class="fa-solid fa-arrow-left"></i> Kembali ke Daftar
+                    </a>
+                </div>
+            </div>
+
+            <!-- Candidate Summary Strip -->
+            <div class="cand-summary-strip hide-initially" role="region" aria-label="Ringkasan Kandidat" id="candidateSummaryStrip">
+                <div class="cand-summary-avatar" aria-hidden="true" id="headerAvatar">RA</div>
+                <div class="cand-summary-info">
+                    <div class="cand-summary-name" id="headerName">Reza Adhitya</div>
+                    <div class="cand-summary-role">Pendaftar Kru Potra Photobooth</div>
+                </div>
+                <div class="cand-summary-metas">
+                    <div class="cand-meta-item">
+                        <i class="fa-regular fa-envelope" aria-hidden="true"></i>
+                        <span id="headerEmail">reza.adhit@email.com</span>
+                    </div>
+                    <div class="cand-meta-item">
+                        <i class="fa-solid fa-graduation-cap" aria-hidden="true"></i>
+                        <span><strong id="headerEducation">S1</strong></span>
+                    </div>
+                    <div class="cand-meta-item">
+                        <i class="fa-solid fa-money-bill-wave" aria-hidden="true"></i>
+                        <span><strong id="headerHonor">Rp 250.000</strong> / event</span>
+                    </div>
+                    <div>
+                        <span class="s-badge s-badge-amber" id="candidateStatusBadge">
+                            <span class="status-dot bg-amber" id="candidateStatusDot"></span>
+                            <span id="candidateStatusText">Wawancara Berlangsung</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Evaluation Layout -->
+            <div class="eval-layout">
+
+                <!-- ── LEFT: Form Penilaian ── -->
+                <div>
+                    <!-- Form Card -->
+                    <div class="s-card card-static">
+                        <div class="s-card-header">
+                            <div>
+                                <h2 class="s-card-title">Form Penilaian</h2>
+                                <p class="s-card-description">Berikan penilaian berdasarkan hasil interview dan observasi terhadap kandidat.</p>
+                            </div>
+                            <!-- Progress -->
+                            <div class="eval-progress-wrapper">
+                                <div class="eval-progress-bar-wrap">
+                                    <div class="eval-progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="6" aria-valuenow="0" id="progressBar" aria-label="Progres penilaian">
+                                        <div class="eval-progress-fill" id="progressFill"></div>
+                                    </div>
+                                    <div class="eval-progress-label" id="progressLabel">0/6</div>
+                                </div>
+                                <div class="eval-progress-hint">kriteria dinilai</div>
+                            </div>
+                        </div>
+
+                        <div class="s-card-content" id="formCardContent">
+
+                            <!-- Lock Notice (hidden by default) -->
+                            <div class="form-locked-notice" id="formLockedNotice" role="alert">
+                                <i class="fa-solid fa-circle-check"></i>
+                                <span>Penilaian telah disimpan. Data siap digunakan dalam proses perhitungan SAW.</span>
+                            </div>
+
+                            <form id="evalForm" novalidate>
+
+                                <!-- Dynamic Criteria Container -->
+                                <div id="criteriaContainer">
+                                    <div class="text-center py-5 text-muted">
+                                        <i class="fa-solid fa-circle-notch fa-spin fs-4 mb-2"></i>
+                                        <p>Memuat form penilaian...</p>
+                                    </div>
+                                </div>
+
+                                <!-- Note Section -->
+                                <div class="mb-4 mt-4">
+                                    <label for="interviewNotes" class="s-label">
+                                        Catatan Interview
+                                        <span class="field-label-optional">(Opsional)</span>
+                                    </label>
+                                    <textarea
+                                        id="interviewNotes"
+                                        class="eval-notes-textarea"
+                                        rows="4"
+                                        placeholder="Tuliskan catatan tambahan dari hasil wawancara, kesan umum, atau hal penting yang tidak tercakup dalam kriteria di atas..."
+                                        aria-describedby="notesHint"
+                                    ></textarea>
+                                    <p class="field-hint" id="notesHint">Catatan ini bersifat internal dan tidak ditampilkan kepada kandidat.</p>
+                                </div>
+
+                                <!-- Submit -->
+                                <button type="button" class="btn-submit-eval" id="btnSimpan" disabled aria-live="polite">
+                                    <div class="btn-spinner" aria-hidden="true"></div>
+                                    <span class="btn-text"><i class="fa-solid fa-floppy-disk"></i>&nbsp; Simpan Penilaian</span>
+                                </button>
+
+                                <!-- Incomplete hint -->
+                                <p class="field-hint text-center mt-2" id="incompleteHint">
+                                    Lengkapi semua kriteria untuk mengaktifkan tombol simpan.
+                                </p>
+                            </form>
+
+                            <!-- Success State (hidden until saved) -->
+                            <div class="eval-success-overlay" id="successOverlay" role="status" aria-live="polite">
+                                <div class="success-icon-ring" aria-hidden="true"><i class="fa-solid fa-check"></i></div>
+                                <h3 class="success-title">Penilaian Berhasil Disimpan</h3>
+                                <p class="success-sub">Data penilaian <strong id="successCandidateName">kandidat</strong> telah dicatat. Proses dapat dilanjutkan ke tahap Perhitungan SAW.</p>
+                                <a href="penilaian.html" class="s-btn s-btn-outline mt-2">
+                                    <i class="fa-solid fa-arrow-left"></i> Kembali ke Daftar Penilaian
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ── RIGHT: Sticky Sidebar ── -->
+                <aside class="eval-sidebar" aria-label="Ringkasan Penilaian">
+                    <!-- Candidate Quick Summary -->
+                    <div class="s-card card-static mb-3">
+                        <div class="s-card-header s-card-header--compact">
+                            <h2 class="s-card-title s-card-title--sm">Ringkasan Kandidat</h2>
+                        </div>
+                        <div class="s-card-content s-card-content--compact-top">
+                            <div class="sidebar-summary-row">
+                                <span class="ss-label">Nama Pelamar</span>
+                                <span class="ss-value" id="sidebarName">Memuat...</span>
+                            </div>
+                            <div class="sidebar-summary-row">
+                                <span class="ss-label">Honor / Event</span>
+                                <span class="ss-value ss-value-honor" id="sidebarHonor">Rp -</span>
+                            </div>
+                            <div class="sidebar-summary-row">
+                                <span class="ss-label">Status</span>
+                                <span class="ss-value">
+                                    <span class="s-badge s-badge-amber s-badge--sm" id="sidebarStatusBadge">
+                                        <span class="status-dot bg-amber" id="sidebarStatusDot"></span>
+                                        <span id="sidebarStatusText">Wawancara Berlangsung</span>
+                                    </span>
+                                </span>
+                            </div>
+                            <div class="sidebar-summary-row">
+                                <span class="ss-label">Tanggal Interview</span>
+                                <span class="ss-value" id="interviewDate">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Criteria Progress -->
+                    <div class="s-card card-static">
+                        <div class="s-card-header s-card-header--compact">
+                            <h2 class="s-card-title s-card-title--sm">Progress Kriteria</h2>
+                        </div>
+                        <div class="s-card-content s-card-content--compact-top">
+                            <div class="criteria-progress-list" id="criteriaProgressList">
+                                <div class="text-center py-4 text-muted text-sm">Memuat kriteria...</div>
+                            </div>
+
+                            <!-- Average score preview -->
+                            <div class="avg-score-section">
+                                <div class="avg-score-row">
+                                    <span class="avg-score-label">Rata-rata Sementara</span>
+                                    <span class="avg-score-value" id="avgScore">—</span>
+                                </div>
+                                <div class="avg-score-sub">dari skala 1–5</div>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+
+            </div><!-- /eval-layout -->
+        </div><!-- /content-area -->
+    </main>
+</div><!-- /admin-layout -->
+
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer" aria-live="polite" aria-atomic="false"></div>
+
+<script src="../assets/js/admin.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    // ── DOM refs ───────────────────────────────────────────────
+    const progressFill     = document.getElementById('progressFill');
+    const progressLabel    = document.getElementById('progressLabel');
+    const progressBar      = document.getElementById('progressBar');
+    const btnSimpan        = document.getElementById('btnSimpan');
+    const incompleteHint   = document.getElementById('incompleteHint');
+    const evalForm         = document.getElementById('evalForm');
+    const successOverlay   = document.getElementById('successOverlay');
+    const formLockedNotice = document.getElementById('formLockedNotice');
+    const avgScore         = document.getElementById('avgScore');
+
+    // Headers
+    const headerAvatar = document.getElementById('headerAvatar');
+    const headerName = document.getElementById('headerName');
+    const headerEmail = document.getElementById('headerEmail');
+    const headerEducation = document.getElementById('headerEducation');
+    const headerHonor = document.getElementById('headerHonor');
+    const candidateSummaryStrip = document.getElementById('candidateSummaryStrip');
+
+    // Sidebars
+    const sidebarName = document.getElementById('sidebarName');
+    const sidebarHonor = document.getElementById('sidebarHonor');
+    const interviewDate = document.getElementById('interviewDate');
+    
+    // Containers
+    const criteriaContainer = document.getElementById('criteriaContainer');
+    const criteriaProgressList = document.getElementById('criteriaProgressList');
+
+    // Status badges
+    const candidateStatusBadge = document.getElementById('candidateStatusBadge');
+    const candidateStatusDot   = document.getElementById('candidateStatusDot');
+    const candidateStatusText  = document.getElementById('candidateStatusText');
+    const sidebarStatusBadge   = document.getElementById('sidebarStatusBadge');
+    const sidebarStatusDot     = document.getElementById('sidebarStatusDot');
+    const sidebarStatusText    = document.getElementById('sidebarStatusText');
+
+    let TOTAL_CRITERIA = 0;
+    const scoreLabels = { 1:'Sangat Kurang', 2:'Kurang', 3:'Cukup', 4:'Baik', 5:'Sangat Baik' };
+    const scores = {};          
+    let submitted = false;
+
+    // Helper: format honor
+    function formatHonor(val) {
+        let num = parseInt(String(val).replace(/\D/g, ''), 10);
+        return isNaN(num) ? val : 'Rp ' + num.toLocaleString('id-ID');
+    }
+
+    // Helper: generate initials
+    function getInitials(name) {
+        return name.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
+    }
+
+    // Initialize Page
+    async function initPage() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const applicantId = urlParams.get('id');
+        
+        if (!applicantId) {
+            alert("ID Kandidat tidak ditemukan!");
+            window.location.href = "penilaian.html";
+            return;
+        }
+
+        const apiBase = (window.location.protocol === 'file:' || window.location.port === '5500' || window.location.port === '5501') ? 'http://localhost:3000' : '';
+        const token = localStorage.getItem('adminToken');
+        const headers = { 'Authorization': `Bearer ${token}` };
+
+        try {
+            // Fetch Candidate Data
+            const resApp = await fetch(`${apiBase}/api/applicants/${applicantId}`, { headers });
+            const dataApp = await resApp.json();
+            
+            if (!dataApp.success || !dataApp.data) throw new Error("Gagal memuat kandidat");
+            
+            const cand = dataApp.data;
+
+            // Populate Headers
+            headerName.textContent = cand.full_name;
+            sidebarName.textContent = cand.full_name;
+            const successNameEl = document.getElementById('successCandidateName');
+            if(successNameEl) successNameEl.textContent = cand.full_name;
+            headerAvatar.textContent = getInitials(cand.full_name);
+            headerEmail.textContent = cand.email;
+            headerEducation.textContent = cand.education;
+            headerHonor.textContent = formatHonor(cand.expected_honor);
+            sidebarHonor.textContent = formatHonor(cand.expected_honor);
+            
+            // Set Today's date for Interview Date
+            const today = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+            interviewDate.textContent = today;
+
+            candidateSummaryStrip.style.display = 'flex';
+
+            // Fetch Criteria
+            const resCrit = await fetch(`${apiBase}/api/criteria`, { headers });
+            const dataCrit = await resCrit.json();
+            
+            if (!dataCrit.success || !dataCrit.data) throw new Error("Gagal memuat kriteria");
+            
+            const criteriaList = dataCrit.data;
+            TOTAL_CRITERIA = criteriaList.length;
+
+            renderCriteria(criteriaList);
+            
+            // Check if already scored
+            // Ideally we'd fetch /api/criteria/evaluations/:id but for now we'll allow overriding or assume it's new.
+            // (If the candidate is already evaluated, the user should've seen a different button on the previous page).
+            
+        } catch (err) {
+            criteriaContainer.innerHTML = `<div class="text-center py-5 text-danger"><i class="fa-solid fa-circle-exclamation fs-4 mb-2"></i><p>${err.message}</p></div>`;
+            criteriaProgressList.innerHTML = `<div class="text-center py-4 text-danger text-sm">Gagal memuat</div>`;
+        }
+    }
+
+    function renderCriteria(criteriaList) {
+        criteriaContainer.innerHTML = '';
+        criteriaProgressList.innerHTML = '';
+
+        criteriaList.forEach((crit, index) => {
+            const num = index + 1;
+            
+            // Sidebar Progress Item
+            const cplHTML = `
+                <div class="cpl-item" id="cpl-${num}">
+                    <div class="cpl-dot"></div>
+                    <span>${crit.name}</span>
+                    <span class="cpl-score-chip" id="chip-${num}">—</span>
+                </div>
+            `;
+            criteriaProgressList.insertAdjacentHTML('beforeend', cplHTML);
+
+            // Form Card
+            let ratingOptions = '';
+            for (let r = 1; r <= 5; r++) {
+                ratingOptions += `
+                    <div class="rating-option">
+                        <input type="radio" name="criteria_${num}" id="c${num}_r${r}" value="${r}" aria-label="${crit.name}: ${r} – ${scoreLabels[r]}">
+                        <label class="rating-pill" for="c${num}_r${r}"><span class="pill-score">${r}</span><span class="pill-label">${scoreLabels[r]}</span></label>
+                    </div>
+                `;
+            }
+
+            const cardHTML = `
+                <div class="criteria-card mb-3" id="card-${num}" data-criteria="${crit.id}">
+                    <div class="criteria-card-header">
+                        <div class="criteria-number">${num}</div>
+                        <div class="criteria-name">${crit.name}</div>
+                        <i class="fa-solid fa-circle-check criteria-check" aria-hidden="true"></i>
+                    </div>
+                    <div class="rating-selector" role="radiogroup">
+                        ${ratingOptions}
+                    </div>
+                </div>
+            `;
+            criteriaContainer.insertAdjacentHTML('beforeend', cardHTML);
+        });
+
+        // Add Event Listeners for new radio buttons
+        for (let i = 1; i <= TOTAL_CRITERIA; i++) {
+            const radios = document.querySelectorAll(`[name="criteria_${i}"]`);
+            radios.forEach(radio => {
+                radio.addEventListener('change', () => {
+                    const val = parseInt(radio.value, 10);
+                    const card = document.getElementById(`card-${i}`);
+                    const criteriaId = parseInt(card.getAttribute('data-criteria'));
+                    
+                    scores[criteriaId] = val; // Map to DB criteria ID
+
+                    // Animate criteria card
+                    card.classList.add('is-rated');
+
+                    // Update sidebar progress item
+                    const cplItem = document.getElementById(`cpl-${i}`);
+                    const chip    = document.getElementById(`chip-${i}`);
+                    cplItem.classList.add('done');
+                    chip.textContent = val;
+
+                    updateProgress();
+                });
+            });
+        }
+        
+        updateProgress();
+    }
+
+    // ── Update Progress ────────────────────────────────────────
+    function updateProgress() {
+        const count = Object.keys(scores).length;
+        const pct   = TOTAL_CRITERIA > 0 ? (count / TOTAL_CRITERIA) * 100 : 0;
+
+        progressFill.style.width = pct + '%';
+        progressLabel.textContent = `${count}/${TOTAL_CRITERIA}`;
+        progressBar.setAttribute('aria-valuenow', count);
+
+        // Update sidebar average
+        if (count > 0) {
+            const sum = Object.values(scores).reduce((a,b) => a + b, 0);
+            avgScore.textContent = (sum / count).toFixed(2);
+        } else {
+            avgScore.textContent = '—';
+        }
+
+        // Enable/disable submit
+        const allDone = count === TOTAL_CRITERIA && TOTAL_CRITERIA > 0;
+        btnSimpan.disabled = !allDone;
+        incompleteHint.style.opacity = allDone ? '0' : '1';
+    }
+
+    // ── Show Toast ──────────────────────────────────────────────
+    function showToast({ icon = 'success', title, message }) {
+        const container = document.getElementById('toastContainer');
+        const toast = document.createElement('div');
+        toast.className = 'toast-item';
+        toast.setAttribute('role', 'alert');
+        toast.innerHTML = `
+            <div class="toast-icon ${icon}">
+                <i class="fa-solid fa-${icon === 'success' ? 'circle-check' : 'circle-exclamation'}"></i>
+            </div>
+            <div>
+                <div class="toast-title">${title}</div>
+                <div class="toast-message">${message}</div>
+            </div>
+            <button class="toast-close" aria-label="Tutup notifikasi">&times;</button>
+        `;
+        container.appendChild(toast);
+
+        toast.querySelector('.toast-close').addEventListener('click', () => dismissToast(toast));
+        requestAnimationFrame(() => requestAnimationFrame(() => toast.classList.add('show')));
+        setTimeout(() => dismissToast(toast), 4000);
+    }
+
+    function dismissToast(toast) {
+        toast.classList.remove('show');
+        toast.classList.add('hide');
+        setTimeout(() => toast.remove(), 350);
+    }
+
+    btnSimpan.addEventListener('click', async () => {
+        if (submitted) return;
+        submitted = true;
+
+        btnSimpan.classList.add('loading');
+        btnSimpan.disabled = true;
+
+        try {
+            const urlParams = new URLSearchParams(window.location.search);
+            const applicantId = urlParams.get('id');
+            const token = localStorage.getItem('adminToken');
+            const apiBase = (window.location.protocol === 'file:' || window.location.port === '5500' || window.location.port === '5501') ? 'http://localhost:3000' : '';
+            
+            const res = await fetch(`${apiBase}/api/criteria/evaluations`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                body: JSON.stringify({ 
+                    candidate_id: applicantId, 
+                    scores: scores 
+                })
+            });
+
+            const data = await res.json();
+            
+            if(data.success) {
+                evalForm.style.transition = 'opacity 0.3s ease';
+                evalForm.style.opacity    = '0';
+                setTimeout(() => {
+                    evalForm.style.display = 'none';
+                    formLockedNotice.classList.add('visible');
+                    successOverlay.classList.add('visible');
+                }, 300);
+
+                [
+                    { badge: candidateStatusBadge, dot: candidateStatusDot, text: candidateStatusText },
+                    { badge: sidebarStatusBadge,   dot: sidebarStatusDot,   text: sidebarStatusText   },
+                ].forEach(({ badge, dot, text }) => {
+                    badge.className = 's-badge s-badge-evaluated';
+                    dot.className   = 'status-dot bg-evaluated';
+                    text.textContent = 'Penilaian Selesai';
+                });
+
+                showToast({
+                    icon: 'success',
+                    title: 'Penilaian Berhasil Disimpan',
+                    message: 'Data penilaian berhasil disimpan dan status kandidat telah diperbarui.',
+                });
+            } else {
+                throw new Error(data.message || 'Gagal menyimpan penilaian');
+            }
+        } catch(err) {
+            btnSimpan.classList.remove('loading');
+            btnSimpan.disabled = false;
+            submitted = false;
+            
+            showToast({
+                icon: 'error',
+                title: 'Gagal',
+                message: err.message
+            });
+        }
+    });
+
+    initPage();
+});
+</script>
+
+</body>
+</html>
+

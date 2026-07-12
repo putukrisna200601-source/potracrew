@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="google" content="notranslate">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail Pelamar - PotraCrew Admin</title>
+    <link rel="icon" href="../assets/img/logo.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap-grid.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap-utilities.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="../assets/css/admin.css">
+</head>
+<body>
+
+<div class="admin-layout">
+    <div class="mesh-bg">
+        <div class="bg-shape shape-1"></div>
+        <div class="bg-shape shape-2"></div>
+        <div class="bg-shape shape-3"></div>
+    </div>
+    <div id="sidebarOverlay" class="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 z-3 d-none"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="#" class="sidebar-logo">
+                <img src="../assets/img/logo.png" alt="PotraCrew Logo">
+                Potra<span>Crew</span>
+            </a>
+        </div>
+        <div class="sidebar-content">
+            <div class="sidebar-section-title">Rekrutmen</div>
+            <a href="index.html" class="sidebar-nav-item"><i class="fa-solid fa-house"></i> Dashboard</a>
+            <a href="data_pelamar.html" class="sidebar-nav-item active"><i class="fa-solid fa-users"></i> Data Pelamar</a>
+            <a href="penilaian.html" class="sidebar-nav-item"><i class="fa-solid fa-clipboard-user"></i> Penilaian Wawancara</a>
+            <a href="arsip.html" class="sidebar-nav-item"><i class="fa-solid fa-folder-open"></i> Arsip Pelamar</a>
+            <div class="sidebar-section-title">Sistem Penunjang Keputusan (SAW)</div>
+            <a href="master_kriteria.html" class="sidebar-nav-item"><i class="fa-solid fa-layer-group"></i> Kriteria & Bobot</a>
+            <a href="perhitungan.html" class="sidebar-nav-item"><i class="fa-solid fa-calculator"></i> Perhitungan SAW</a>
+            <a href="keputusan.html" class="sidebar-nav-item"><i class="fa-solid fa-medal"></i> Keputusan Rekrutmen</a>
+        </div>
+        <div class="sidebar-footer">
+<a href="login.html" class="sidebar-nav-item text-danger"><i class="fa-solid fa-arrow-right-from-bracket"></i> Logout</a>
+        </div>
+    </aside>
+
+    <main class="main-wrapper">
+        <header class="topbar">
+            <div class="d-flex align-items-center gap-3">
+                <button class="icon-btn mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle Mobile Menu">
+                    <i class="fa-solid fa-bars" aria-hidden="true"></i>
+                </button>
+                <div class="breadcrumb-nav d-none d-md-flex">
+                    <a href="index.html" class="text-muted text-decoration-none">Dashboard</a>
+                    <i class="fa-solid fa-chevron-right text-xs opacity-50"></i>
+                    <a href="data_pelamar.html" class="text-muted text-decoration-none">Data Pelamar</a>
+                    <i class="fa-solid fa-chevron-right text-xs opacity-50"></i>
+                    <span class="current">Detail Pelamar</span>
+                </div>
+            </div>
+            <div class="topbar-actions">
+                <div class="profile-avatar" title="Administrator">A</div>
+            </div>
+        </header>
+
+        <div class="content-area">
+            <div class="page-header d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                <div>
+                    <h1 class="page-title">Detail Pelamar</h1>
+                    <p class="page-description">Tinjau profil lengkap dan ambil keputusan administratif.</p>
+                </div>
+                <div>
+                    <a href="data_pelamar.html" class="s-btn s-btn-outline">
+                        <i class="fa-solid fa-arrow-left"></i> Kembali ke Daftar
+                    </a>
+                </div>
+            </div>
+
+            <!-- 2-Column Profile Grid -->
+            <div class="profile-grid">
+
+                <!-- KIRI 70% -->
+                <div class="profile-left">
+
+                    <!-- Section 1: Profil Pelamar -->
+                    <div class="s-card mb-4">
+                        <div class="s-card-header">
+                            <div>
+                                <h2 class="s-card-title">Profil Pelamar</h2>
+                                <p class="s-card-description">Data diri yang dikirim melalui formulir pendaftaran online.</p>
+                            </div>
+                        </div>
+                        <div class="s-card-content p-0">
+                            <div class="profile-avatar-header">
+                                <div class="profile-big-avatar" id="profAvatar">RA</div>
+                                <div>
+                                    <div class="profile-name" id="profName">-</div>
+                                    <div class="profile-pos text-muted text-sm">Pendaftar Kru Potra Photobooth</div>
+                                    <div class="mt-2"><span class="s-badge s-badge-warning" id="profBadge"><span class="status-dot bg-warning" id="profDot"></span> <span id="profStatusText">Menunggu Verifikasi Administrasi</span></span></div>
+                                </div>
+                            </div>
+                            <div class="profile-details-grid">
+                                <div class="detail-item">
+                                    <div class="detail-label"><i class="fa-regular fa-envelope"></i> Email</div>
+                                    <div class="detail-value" id="profEmail">-</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label"><i class="fa-solid fa-phone"></i> Nomor HP</div>
+                                    <div class="detail-value" id="profHp">-</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label"><i class="fa-solid fa-cake-candles"></i> Umur</div>
+                                    <div class="detail-value" id="profAge">-</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label"><i class="fa-solid fa-graduation-cap"></i> Pendidikan</div>
+                                    <div class="detail-value" id="profEdu">-</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label"><i class="fa-solid fa-money-bill-wave"></i> Honor per Event</div>
+                                    <div class="detail-value font-semibold text-primary-custom" id="profHonor">-</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label"><i class="fa-regular fa-calendar"></i> Tanggal Melamar</div>
+                                    <div class="detail-value" id="profDate">-</div>
+                                </div>
+                                <div class="detail-item full-width">
+                                    <div class="detail-label"><i class="fa-solid fa-location-dot"></i> Alamat Lengkap</div>
+                                    <div class="detail-value" id="profAddress">-</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 2: CV -->
+                    <div class="s-card mb-4">
+                        <div class="s-card-header">
+                            <h2 class="s-card-title">Curriculum Vitae (CV)</h2>
+                        </div>
+                        <div class="s-card-content">
+                            <div class="cv-card d-flex flex-column flex-sm-row justify-content-between align-items-sm-center gap-3">
+                                <div class="cv-info d-flex align-items-center gap-3">
+                                    <div class="cv-icon"><i class="fa-solid fa-file-pdf"></i></div>
+                                    <div>
+                                        <div class="cv-filename font-medium" id="cvFilename">CV_Reza_Adhitya_2026.pdf</div>
+                                        <div class="cv-meta text-muted text-xs mt-1">
+                                            <span><i class="fa-solid fa-file-pdf"></i> Format PDF</span>
+                                            <span class="mx-2">•</span>
+                                            <span id="cvSize">Unknown Size</span>
+                                            <span class="mx-2">•</span>
+                                            <span id="cvDate">Diunggah 15 Jul 2026</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="cv-actions d-flex gap-2 flex-shrink-0">
+                                    <a href="#" id="btnLihatCv" target="_blank" class="s-btn s-btn-outline s-btn-sm"><i class="fa-regular fa-eye"></i> Lihat CV</a>
+                                    <a href="#" id="btnUnduhCv" download class="s-btn s-btn-outline s-btn-sm"><i class="fa-solid fa-download"></i> Unduh</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 3: Timeline Rekrutmen -->
+                    <div class="s-card mb-4">
+                        <div class="s-card-header">
+                            <div>
+                                <h2 class="s-card-title">Timeline Rekrutmen</h2>
+                                <p class="s-card-description">Riwayat perkembangan status pelamar dalam proses seleksi.</p>
+                            </div>
+                        </div>
+                        <div class="s-card-content">
+                            <ul class="vertical-timeline">
+                                <li class="timeline-node completed">
+                                    <div class="node-icon"><i class="fa-solid fa-check"></i></div>
+                                    <div class="node-content">
+                                        <div class="node-title">Lamaran Dikirim</div>
+                                        <div class="node-date">15 Juli 2026, 14:30 WIB</div>
+                                        <div class="node-desc">Formulir pendaftaran berhasil diterima oleh sistem.</div>
+                                    </div>
+                                </li>
+                                <li class="timeline-node active" id="nodeAdmin">
+                                    <div class="node-icon"><span class="node-pulse"></span></div>
+                                    <div class="node-content">
+                                        <div class="node-title" id="nodeAdminTitle">Verifikasi Administrasi</div>
+                                        <div class="node-date" id="nodeAdminDate">Sedang berlangsung...</div>
+                                        <div class="node-desc" id="nodeAdminDesc">Menunggu keputusan dari Administrator.</div>
+                                    </div>
+                                </li>
+                                <li class="timeline-node pending" id="nodeInterview">
+                                    <div class="node-icon"></div>
+                                    <div class="node-content">
+                                        <div class="node-title">Interview</div>
+                                        <div class="node-date" id="nodeInterviewDate">—</div>
+                                    </div>
+                                </li>
+                                <li class="timeline-node pending" id="nodePenilaianWawancara">
+                                    <div class="node-icon"></div>
+                                    <div class="node-content">
+                                        <div class="node-title">Penilaian Wawancara</div>
+                                        <div class="node-date mb-2">—</div>
+                                        <a href="#" id="btnPenilaianWawancara" class="s-btn s-btn-outline s-btn-sm d-inline-flex align-items-center gap-2 mt-1 d-none">
+                                            <i class="fa-solid fa-clipboard-user"></i> Penilaian Wawancara
+                                        </a>
+                                    </div>
+                                </li>
+                                <li class="timeline-node pending">
+                                    <div class="node-icon"></div>
+                                    <div class="node-content">
+                                        <div class="node-title">Perhitungan SAW</div>
+                                        <div class="node-date">—</div>
+                                    </div>
+                                </li>
+                                <li class="timeline-node pending">
+                                    <div class="node-icon"></div>
+                                    <div class="node-content">
+                                        <div class="node-title">Keputusan Akhir</div>
+                                        <div class="node-date">—</div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <!-- KANAN 30% -->
+                <div class="profile-right">
+
+                    <!-- Ringkasan -->
+                    <div class="s-card mb-4">
+                        <div class="s-card-header">
+                            <h2 class="s-card-title">Ringkasan</h2>
+                        </div>
+                        <div class="s-card-content p-0">
+                            <div class="summary-list">
+                                <div class="summary-row">
+                                    <span class="summary-label">Status</span>
+                                    <span id="summaryStatusBadge" class="s-badge s-badge-warning"><span class="status-dot bg-warning" id="summaryStatusDot"></span> <span id="summaryStatusText">Menunggu Verifikasi</span></span>
+                                </div>
+                                <div class="summary-row">
+                                    <span class="summary-label">Honor</span>
+                                    <span class="font-semibold text-sm" id="sumHonor">-</span>
+                                </div>
+                                <div class="summary-row">
+                                    <span class="summary-label">Pendidikan</span>
+                                    <span class="font-medium text-sm" id="sumEdu">-</span>
+                                </div>
+                                <div class="summary-row">
+                                    <span class="summary-label">Tanggal Daftar</span>
+                                    <span class="text-sm text-muted" id="sumDate">-</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Action -->
+                    <div class="s-card action-card-highlight">
+                        <div class="s-card-header">
+                            <div>
+                                <h2 class="s-card-title">Aksi Rekrutmen</h2>
+                                <p class="s-card-description">Ambil keputusan administratif untuk pelamar ini.</p>
+                            </div>
+                        </div>
+                        <div class="s-card-content d-flex flex-column gap-3" id="actionButtonsContainer">
+                            <button class="s-btn s-btn-primary w-100" id="btnActionLolos">
+                                <i class="fa-solid fa-check"></i> Lolos Administrasi
+                            </button>
+                            <button class="s-btn w-100 btn-destructive" id="btnActionGagal">
+                                <i class="fa-solid fa-xmark"></i> Tidak Lolos Administrasi
+                            </button>
+                        </div>
+                        <div class="s-card-content d-none py-3 action-completed-wrapper" id="actionCompletedContainer">
+                            <div class="d-flex flex-column align-items-center justify-content-center action-completed-inner">
+                                <div class="empty-icon-box empty-icon-box--primary mx-auto mb-2">
+                                    <i class="fa-solid fa-lock text-primary-custom"></i>
+                                </div>
+                                <div class="text-sm text-muted text-center">Keputusan telah dibuat dan dikunci.</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+</div>
+
+<!-- ===== DIALOGS ===== -->
+<!-- Dialog Lolos -->
+<div class="dialog-overlay" id="dialogLolos" role="dialog" aria-modal="true" aria-labelledby="dialogLolosTitle">
+    <div class="dialog-box">
+        <div class="dialog-header">
+            <h3 id="dialogLolosTitle">Jadwalkan Interview</h3>
+            <button class="dialog-close btn-close-dialog" data-target="dialogLolos" aria-label="Tutup"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="dialog-content">
+            <p class="text-sm text-muted mb-4">Kandidat memenuhi syarat administrasi. Tentukan jadwal wawancara untuk tahap selanjutnya.</p>
+            <div class="form-group mb-3">
+                <label class="detail-label mb-1" for="interviewDate">Tanggal Interview</label>
+                <input type="date" id="interviewDate" class="s-input w-100">
+            </div>
+            <div class="form-group mb-3">
+                <label class="detail-label mb-1" for="interviewTime">Jam Mulai</label>
+                <input type="time" id="interviewTime" class="s-input w-100">
+            </div>
+
+            <div class="form-group mb-3">
+                <label class="detail-label mb-1" for="interviewLocation">Lokasi / Tautan Online</label>
+                <input type="text" id="interviewLocation" class="s-input w-100" placeholder="Contoh: Kantor Potra atau Link Google Meet">
+            </div>
+            <div class="form-group mb-4">
+                <label class="detail-label mb-1" for="interviewNote">Catatan untuk Pelamar (Opsional)</label>
+                <textarea id="interviewNote" class="s-input w-100" rows="3" placeholder="Pesan tambahan yang akan dikirim ke pelamar..."></textarea>
+            </div>
+            <div class="d-flex justify-content-end gap-2">
+                <button class="s-btn s-btn-outline btn-close-dialog" data-target="dialogLolos">Batal</button>
+                <button class="s-btn s-btn-primary" id="btnSimpanLolos"><i class="fa-solid fa-calendar-check"></i> Simpan Jadwal</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Dialog Tolak -->
+<div class="dialog-overlay" id="dialogTolak" role="dialog" aria-modal="true" aria-labelledby="dialogTolakTitle">
+    <div class="dialog-box">
+        <div class="dialog-header">
+            <h3 id="dialogTolakTitle">Konfirmasi Penolakan</h3>
+            <button class="dialog-close btn-close-dialog" data-target="dialogTolak" aria-label="Tutup"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="dialog-content">
+            <div class="dialog-warning-box mb-4">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+                <p class="text-sm mb-0">Kandidat ini akan <strong>digugurkan</strong> dari proses rekrutmen. Tindakan ini akan dicatat dalam sistem dan tidak dapat dibatalkan.</p>
+            </div>
+            <div class="form-group mb-4">
+                <label class="detail-label mb-1" for="rejectReason">Alasan Penolakan</label>
+                <textarea id="rejectReason" class="s-input w-100" rows="3" placeholder="Tuliskan alasan mengapa pelamar tidak lolos administrasi..."></textarea>
+            </div>
+            <div class="d-flex justify-content-end gap-2">
+                <button class="s-btn s-btn-outline btn-close-dialog" data-target="dialogTolak">Batal</button>
+                <button class="s-btn btn-destructive" id="btnSimpanTolak"><i class="fa-solid fa-ban"></i> Simpan & Tolak</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../assets/js/admin.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Open dialogs
+    document.getElementById('btnActionLolos').addEventListener('click', () => {
+        document.getElementById('dialogLolos').classList.add('active');
+    });
+    document.getElementById('btnActionGagal').addEventListener('click', () => {
+        document.getElementById('dialogTolak').classList.add('active');
+    });
+
+    // Close dialogs (all buttons with btn-close-dialog class)
+    document.querySelectorAll('.btn-close-dialog').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const target = btn.getAttribute('data-target');
+            document.getElementById(target).classList.remove('active');
+        });
+    });
+
+    // Close on overlay click
+    document.querySelectorAll('.dialog-overlay').forEach(overlay => {
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) overlay.classList.remove('active');
+        });
+    });
+
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            document.querySelectorAll('.dialog-overlay.active').forEach(d => d.classList.remove('active'));
+        }
+    });
+
+    // Extract ID from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const applicantId = urlParams.get('id');
+
+    async function loadApplicantDetail() {
+        if(!applicantId) return;
+        const token = localStorage.getItem('adminToken');
+        const apiBase = (window.location.protocol === 'file:' || window.location.port === '5500' || window.location.port === '5501') ? 'http://localhost:3000' : '';
+        try {
+            const res = await fetch(`${apiBase}/api/applicants/` + applicantId, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            const data = await res.json();
+            if(data.success && data.data) {
+                const app = data.data;
+
+                // Calculate age
+                const dob = new Date(app.dob);
+                const age = Math.abs(new Date(Date.now() - dob.getTime()).getUTCFullYear() - 1970);
+                
+                // Format date
+                const applyDate = new Date(app.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+                const sumDate = new Date(app.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+                
+                // Initials
+                const initials = app.full_name.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
+
+                // Format Honor
+                let honorVal = parseInt(String(app.expected_honor).replace(/\D/g, ''), 10);
+                let honorStr = isNaN(honorVal) ? app.expected_honor : 'Rp ' + honorVal.toLocaleString('id-ID');
+
+                // Profile Section
+                document.getElementById('profName').textContent = app.full_name;
+                document.getElementById('profAvatar').textContent = initials;
+                document.getElementById('profEmail').textContent = app.email;
+                document.getElementById('profHp').textContent = app.whatsapp;
+                document.getElementById('profAge').textContent = age + ' Tahun';
+                document.getElementById('profEdu').textContent = app.education;
+                document.getElementById('profHonor').textContent = honorStr;
+                document.getElementById('profDate').textContent = applyDate;
+                document.getElementById('profAddress').textContent = app.address || '-';
+
+                // Summary Section
+                document.getElementById('sumHonor').textContent = honorStr;
+                document.getElementById('sumEdu').textContent = app.education;
+                document.getElementById('sumDate').textContent = sumDate;
+                
+                // CV Section
+                if(app.cv_file) {
+                    let cvName = app.cv_file.split('/').pop().split('\\').pop();
+                    if (cvName.includes('_')) {
+                        cvName = cvName.substring(cvName.indexOf('_') + 1);
+                    } else if (cvName.length >= 36) {
+                        // Ini adalah UUID mentah dari sistem lama, kita buatkan nama fallback
+                        cvName = 'CV_' + app.full_name.replace(/\s+/g, '_') + '.pdf';
+                    }
+                    document.getElementById('cvFilename').textContent = cvName;
+                    document.getElementById('cvDate').textContent = 'Diunggah ' + applyDate;
+                    
+                    const cvUrl = apiBase + '/uploads/' + app.cv_file.replace(/\\/g, '/');
+                    document.getElementById('btnLihatCv').href = cvUrl;
+                    document.getElementById('btnUnduhCv').href = cvUrl;
+                    document.getElementById('btnUnduhCv').setAttribute('download', cvName);
+                    
+                    document.getElementById('btnLihatCv').classList.remove('d-none');
+                    document.getElementById('btnUnduhCv').classList.remove('d-none');
+                    
+                    // Ambil ukuran file (size) secara dinamis menggunakan HTTP HEAD
+                    fetch(cvUrl, { method: 'HEAD' })
+                        .then(res => {
+                            if(res.ok) {
+                                const sizeBytes = res.headers.get('content-length');
+                                if(sizeBytes) {
+                                    const sizeMb = (sizeBytes / (1024 * 1024)).toFixed(2);
+                                    document.getElementById('cvSize').textContent = sizeMb + ' MB';
+                                }
+                            }
+                        })
+                        .catch(e => console.error('Could not fetch file size:', e));
+                } else {
+                    document.getElementById('cvFilename').textContent = 'Tidak ada CV';
+                    document.getElementById('cvDate').textContent = '-';
+                    document.getElementById('cvSize').textContent = '-';
+                    document.getElementById('btnLihatCv').classList.add('d-none');
+                    document.getElementById('btnUnduhCv').classList.add('d-none');
+                }
+                
+                // Update status badge & timeline
+                const badge = document.getElementById('summaryStatusBadge');
+                const dot = document.getElementById('summaryStatusDot');
+                const text = document.getElementById('summaryStatusText');
+
+                const profBadge = document.getElementById('profBadge');
+                const profDot = document.getElementById('profDot');
+                const profText = document.getElementById('profStatusText');
+                
+                const setStatus = (bClass, dClass, txt) => {
+                    badge.className = 's-badge ' + bClass;
+                    dot.className = 'status-dot ' + dClass;
+                    text.textContent = txt;
+
+                    profBadge.className = 's-badge ' + bClass;
+                    profDot.className = 'status-dot ' + dClass;
+                    profText.textContent = txt;
+                };
+
+                // Format Date Helper
+                const formatDateTime = (dateStr) => {
+                    const d = new Date(dateStr);
+                    if (isNaN(d.getTime())) return '—';
+                    return d.toLocaleString('id-ID', {
+                        day: 'numeric', month: 'long', year: 'numeric',
+                        hour: '2-digit', minute: '2-digit'
+                    }).replace(/\./g, ':') + ' WIB';
+                };
+
+                const history = data.history || [];
+                
+                // Node 1: Lamaran Dikirim
+                const pendingRecord = history.find(h => h.status === 'pending');
+                const lamaranDate = pendingRecord ? pendingRecord.created_at : app.created_at;
+                document.querySelector('.vertical-timeline .timeline-node:nth-child(1) .node-date').textContent = formatDateTime(lamaranDate);
+
+                // Get all history records
+                const getHistoryRecord = (statArr) => history.find(h => statArr.includes(h.status));
+
+                if(app.status === 'pending') {
+                    setStatus('s-badge-warning', 'bg-warning', 'Menunggu Verifikasi Administrasi');
+                } else if(app.status === 'rejected') {
+                    setStatus('s-badge-danger', 'bg-danger', 'Tidak Lolos');
+                    document.getElementById('actionButtonsContainer').classList.add('d-none');
+                    document.getElementById('actionCompletedContainer').classList.remove('d-none');
+                    
+                    const nodeAdmin = document.getElementById('nodeAdmin');
+                    nodeAdmin.classList.replace('active', 'rejected');
+                    nodeAdmin.querySelector('.node-icon').innerHTML = '<i class="fa-solid fa-xmark"></i>';
+                    document.getElementById('nodeAdminTitle').textContent = 'Tidak Lolos Administrasi';
+                    
+                    const adminDesc = document.getElementById('nodeAdminDesc');
+                    if (adminDesc) adminDesc.textContent = 'Kandidat tidak memenuhi kriteria administrasi.';
+                    
+                    const rejRecord = getHistoryRecord(['rejected', 'Tidak Lolos']);
+                    if (rejRecord) {
+                        document.getElementById('nodeAdminDate').textContent = formatDateTime(rejRecord.created_at);
+                    } else {
+                        document.getElementById('nodeAdminDate').textContent = 'Selesai';
+                    }
+                } else {
+                    // Passed Admin Verification
+                    const nodeAdmin = document.getElementById('nodeAdmin');
+                    nodeAdmin.classList.replace('active', 'completed');
+                    nodeAdmin.querySelector('.node-icon').innerHTML = '<i class="fa-solid fa-check"></i>';
+                    document.getElementById('nodeAdminTitle').textContent = 'Lolos Administrasi';
+                    const adminDesc = document.getElementById('nodeAdminDesc');
+                    if (adminDesc) adminDesc.textContent = 'Kandidat memenuhi kualifikasi administratif awal.';
+                    
+                    const adminRecord = getHistoryRecord(['interview', 'Lolos Administrasi']);
+                    if (adminRecord) {
+                        document.getElementById('nodeAdminDate').textContent = formatDateTime(adminRecord.created_at);
+                    } else {
+                        document.getElementById('nodeAdminDate').textContent = 'Selesai';
+                    }
+
+                    if(app.status === 'interview') {
+                        setStatus('s-badge-amber', 'bg-amber', 'Wawancara Berlangsung');
+                        document.getElementById('actionButtonsContainer').classList.add('d-none');
+                        document.getElementById('actionCompletedContainer').classList.remove('d-none');
+                        
+                        const nodeInterview = document.getElementById('nodeInterview');
+                        nodeInterview.classList.replace('pending', 'completed');
+                        nodeInterview.querySelector('.node-icon').innerHTML = '<i class="fa-solid fa-check"></i>';
+                        if (adminRecord) document.getElementById('nodeInterviewDate').textContent = formatDateTime(adminRecord.created_at);
+
+                        const nodePenilaian = document.getElementById('nodePenilaianWawancara');
+                        nodePenilaian.classList.replace('pending', 'active');
+                        nodePenilaian.querySelector('.node-icon').innerHTML = '<span class="node-pulse"></span>';
+                        
+                        const btnNilai = document.getElementById('btnPenilaianWawancara');
+                        if(btnNilai) {
+                            btnNilai.href = 'penilaian_interview.html?id=' + app.id;
+                            btnNilai.classList.remove('d-none');
+                        }
+                    } else if (app.status === 'evaluated') {
+                        setStatus('s-badge-success', 'bg-success', 'Penilaian Selesai');
+                        document.getElementById('actionButtonsContainer').classList.add('d-none');
+                        document.getElementById('actionCompletedContainer').classList.remove('d-none');
+                        
+                        const nodeInterview = document.getElementById('nodeInterview');
+                        nodeInterview.classList.replace('pending', 'completed');
+                        nodeInterview.querySelector('.node-icon').innerHTML = '<i class="fa-solid fa-check"></i>';
+                        if (adminRecord) document.getElementById('nodeInterviewDate').textContent = formatDateTime(adminRecord.created_at);
+
+                        const nodePenilaian = document.getElementById('nodePenilaianWawancara');
+                        nodePenilaian.classList.replace('pending', 'completed');
+                        nodePenilaian.querySelector('.node-icon').innerHTML = '<i class="fa-solid fa-check"></i>';
+                        const evalRecord = getHistoryRecord(['evaluated']);
+                        if (evalRecord) nodePenilaian.querySelector('.node-date').textContent = formatDateTime(evalRecord.created_at);
+                    } else if (app.status === 'accepted') {
+                        setStatus('s-badge-indigo', 'bg-indigo', 'Diterima');
+                        document.getElementById('actionButtonsContainer').classList.add('d-none');
+                        document.getElementById('actionCompletedContainer').classList.remove('d-none');
+                    }
+                }
+            }
+        } catch(e) {
+            console.error(e);
+        }
+    }
+    
+    // Load on start
+    loadApplicantDetail();
+
+    async function updateStatus(status, notes = '') {
+        const token = localStorage.getItem('adminToken');
+        const apiBase = (window.location.protocol === 'file:' || window.location.port === '5500' || window.location.port === '5501') ? 'http://localhost:3000' : '';
+        try {
+            const res = await fetch(`${apiBase}/api/applicants/${applicantId}/status`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+                body: JSON.stringify({ status, notes })
+            });
+            const data = await res.json();
+            if(data.success) {
+                location.reload();
+            } else {
+                alert('Gagal: ' + data.message);
+            }
+        } catch(e) {
+            alert('Error: ' + e.message);
+        }
+    }
+
+    // === AKSI: Lolos Administrasi ===
+    document.getElementById('btnSimpanLolos').addEventListener('click', () => {
+        const date = document.getElementById('interviewDate').value;
+        const time = document.getElementById('interviewTime').value;
+
+        const locationStr = document.getElementById('interviewLocation').value || '-';
+        const addNote = document.getElementById('interviewNote').value;
+        
+        let notes = `Selamat! Anda Lolos Tahap Administrasi.\n\n`;
+        if (date) {
+            notes += `Jadwal Interview:\nTanggal: ${date}\nJam: ${time} WITA\nLokasi: ${locationStr}\n\n`;
+        }
+        if (addNote) {
+            notes += `Catatan Tambahan: ${addNote}`;
+        }
+
+        document.getElementById('dialogLolos').classList.remove('active');
+        // Update DB status to evaluated
+        updateStatus('evaluated', notes);
+    });
+
+    // === AKSI: Tidak Lolos Administrasi ===
+    document.getElementById('btnSimpanTolak').addEventListener('click', () => {
+        const notes = 'Mohon maaf, Anda belum memenuhi kualifikasi untuk melanjutkan ke tahap berikutnya saat ini. Terima kasih atas partisipasi Anda dan tetap semangat!';
+        document.getElementById('dialogTolak').classList.remove('active');
+        // Update DB status to rejected
+        updateStatus('rejected', notes);
+    });
+
+    // Initialize Flatpickr for date formatting (DD/MM/YYYY)
+    flatpickr("#interviewDate", {
+        dateFormat: "d/m/Y",
+        minDate: "today",
+        disableMobile: "true",
+        placeholder: "Pilih tanggal..."
+    });
+});
+</script>
+</body>
+</html>

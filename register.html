@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="google" content="notranslate">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PotraCrew - Pendaftaran Calon Kru</title>
+    <!-- Favicon -->
+    <link rel="icon" href="assets/img/logo.png" type="image/png">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="bg-light-custom d-flex flex-column min-vh-100">
+
+<!-- 1. Navbar -->
+<nav class="navbar navbar-expand-lg navbar-custom sticky-top bg-white">
+    <div class="container">
+        <a class="navbar-brand" href="index.html">
+            <img src="assets/img/logo.png" alt="PotraCrew Logo" class="navbar-logo-img">
+            PotraCrew
+        </a>
+        <button class="navbar-toggler border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" title="Toggle Navigation">
+            <i class="fa-solid fa-bars fs-4"></i>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mx-auto align-items-center">
+                <li class="nav-item"><a class="nav-link" href="index.html#beranda">Beranda</a></li>
+                <li class="nav-item"><a class="nav-link" href="index.html#tentang">Tentang</a></li>
+                <li class="nav-item"><a class="nav-link" href="index.html#keuntungan">Keuntungan</a></li>
+                <li class="nav-item"><a class="nav-link" href="index.html#budaya">Budaya</a></li>
+                <li class="nav-item"><a class="nav-link" href="index.html#galeri">Galeri</a></li>
+                <li class="nav-item"><a class="nav-link" href="index.html#rekrutmen">Proses Rekrutmen</a></li>
+                <li class="nav-item"><a class="nav-link" href="index.html#faq">FAQ</a></li>
+            </ul>
+            <div class="d-flex align-items-center gap-4 mt-3 mt-lg-0">
+                <div class="dropdown">
+                    <a class="nav-link dropdown-toggle text-dark fw-medium d-flex align-items-center gap-2" href="#" id="langDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAABGdBTUEAALGPC/xhBQAAADZJREFUOBFj/P//PwM1ARMDlcGogZRSxsDAwIARCwZwiT9//jBCxRmR+aMGUkoZoxnIR8UjDwMAr/wPF5Vj/3MAAAAASUVORK5CYII=" width="20" alt="ID"> ID
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end border-0 shadow-sm rounded-3 mt-2" aria-labelledby="langDropdown">
+                            <li><a class="dropdown-item fw-medium bg-light d-flex align-items-center gap-2" href="#" title="Bahasa Indonesia"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAYAAADkmO9VAAAABGdBTUEAALGPC/xhBQAAADZJREFUOBFj/P//PwM1ARMDlcGogZRSxsDAwIARCwZwiT9//jBCxRmR+aMGUkoZoxnIR8UjDwMAr/wPF5Vj/3MAAAAASUVORK5CYII=" width="20" alt="ID"> Indonesia</a></li>
+                            <li><a class="dropdown-item text-muted d-flex align-items-center gap-2" href="#" title="English"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAPCAIAAABxOSiCAAAABGdBTUEAALGPC/xhBQAAASlJREFUKBWV079rwlAQB/C/iLpYxEnB/8G1gzi4VHE1uItYXYK4uXQpiOAWB0uL+AcUQcRBBEGcHJtOaekv0F+htN89w0UaA31w3H3uvXv33D1CSL9vGIZlWbqut1otXdf7/b6iKHzfbzQaimK02+3lcknTVK/XU6vVer3O8/xyueR5/vT+DgaDy+ViWRbHcZPJxDCM9Xq9XC6GYRwc/J1MJiFEOByORqOu6zI28/k8l8v1+/1arZZMJhmbnM/nRCIBI6zVarIsA2g8HufzeRiB7/sA/fF4RCIR8N9wOGBMU1W1UCgcDodyuVwoFGazeT6fQ7Z932dsuq5bLpd5nvd9/3a77Xa7crn8y4/8X/4QZts2BEEBBMGwbfvX8334n8A0TQqCYJrmb/EBOA8f/y3sI84AAAAASUVORK5CYII=" width="20" alt="EN"> English</a></li>
+                        </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- 2. Main Registration Section -->
+<section class="section-padding py-5 flex-grow-1">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                
+                <!-- Main Card -->
+                <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white position-relative overflow-hidden" id="registrationCard">
+                    
+                    <div class="text-center mb-5 fade-in-up">
+                        <h2 class="fw-bold text-primary mb-2">Formulir Pendaftaran</h2>
+                        <p class="text-muted">Bergabunglah dengan tim profesional Potra Photobooth</p>
+                    </div>
+
+                    <!-- Progress Indicator -->
+                    <div class="stepper-wrapper mb-5 fade-in-up delay-100">
+                        <div class="stepper-item completed">
+                            <div class="step-counter">1</div>
+                            <div class="step-name">Data Diri</div>
+                        </div>
+                        <div class="stepper-item" id="step-indicator-2">
+                            <div class="step-counter">2</div>
+                            <div class="step-name">Pengalaman</div>
+                        </div>
+                        <div class="stepper-item" id="step-indicator-3">
+                            <div class="step-counter">3</div>
+                            <div class="step-name">Dokumen</div>
+                        </div>
+                        <div class="stepper-item" id="step-indicator-4">
+                            <div class="step-counter">4</div>
+                            <div class="step-name">Konfirmasi</div>
+                        </div>
+                    </div>
+
+                    <form id="registrationForm" onsubmit="return false;" novalidate>
+                        
+                        <!-- STEP 1: Data Diri -->
+                        <div class="form-step form-step-active" id="step1">
+                            <h4 class="fw-bold mb-4">1. Data Diri</h4>
+                            
+                            <div class="mb-4">
+                                <label for="fullName" class="form-label fw-medium">Nama Lengkap <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control form-control-custom" id="fullName" placeholder="Masukkan nama lengkap Anda" required>
+                                <div class="invalid-feedback">Nama lengkap wajib diisi.</div>
+                            </div>
+                            
+                            <div class="row mb-4">
+                                <div class="col-md-8 mb-4 mb-md-0">
+                                    <label for="dob" class="form-label fw-medium">Tanggal Lahir <span class="text-danger">*</span></label>
+                                    <input type="date" class="form-control form-control-custom" id="dob" required>
+                                    <div class="invalid-feedback">Silakan masukkan tanggal lahir yang valid.</div>
+                                </div>
+                                <div class="col-md-4">
+                                    <label for="age" class="form-label fw-medium text-muted">Umur</label>
+                                    <input type="text" class="form-control form-control-custom bg-light" id="age" placeholder="Terisi otomatis" readonly>
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label fw-medium">Jenis Kelamin <span class="text-danger">*</span></label>
+                                <div class="d-flex gap-4">
+                                    <div class="form-check custom-radio">
+                                        <input class="form-check-input" type="radio" name="gender" id="genderMale" value="Laki-laki" required>
+                                        <label class="form-check-label" for="genderMale">Laki-laki</label>
+                                    </div>
+                                    <div class="form-check custom-radio">
+                                        <input class="form-check-input" type="radio" name="gender" id="genderFemale" value="Perempuan" required>
+                                        <label class="form-check-label" for="genderFemale">Perempuan</label>
+                                    </div>
+                                </div>
+                                <div class="invalid-feedback" id="genderError">Pilih salah satu jenis kelamin.</div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="address" class="form-label fw-medium">Alamat Lengkap <span class="text-danger">*</span></label>
+                                <textarea class="form-control form-control-custom" id="address" rows="3" placeholder="Masukkan alamat domisili saat ini" required></textarea>
+                                <div class="invalid-feedback">Alamat lengkap wajib diisi.</div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="education" class="form-label fw-medium">Pendidikan Terakhir <span class="text-danger">*</span></label>
+                                <select class="form-select form-control-custom" id="education" required>
+                                    <option value="" selected disabled>Pilih pendidikan terakhir</option>
+                                    <option value="SMA/SMK">SMA / SMK Sederajat</option>
+                                    <option value="D3">Diploma (D3)</option>
+                                    <option value="S1">Sarjana (S1)</option>
+                                    <option value="Lainnya">Lainnya</option>
+                                </select>
+                                <div class="invalid-feedback">Pilih pendidikan terakhir Anda.</div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="currentJob" class="form-label fw-medium">Status Pekerjaan Saat Ini <span class="text-muted fw-normal">(Opsional)</span></label>
+                                <input type="text" class="form-control form-control-custom" id="currentJob" placeholder="Contoh: Mahasiswa, Freelancer, dll.">
+                            </div>
+
+
+
+                            <div class="d-flex flex-column-reverse flex-sm-row gap-3 justify-content-between mt-5">
+                                <a href="index.html" class="btn btn-outline-secondary d-inline-flex align-items-center justify-content-center"><i class="fa-solid fa-house me-2"></i> Beranda</a>
+                                <button type="button" class="btn btn-accent btn-next d-inline-flex align-items-center justify-content-center">Selanjutnya <i class="fa-solid fa-arrow-right ms-2"></i></button>
+                            </div>
+                        </div>
+
+                        <!-- STEP 2: Kontak & Pengalaman -->
+                        <div class="form-step d-none" id="step2">
+                            <h4 class="fw-bold mb-4">2. Kontak & Pengalaman</h4>
+                            
+                            <div class="row mb-4">
+                                <div class="col-md-6 mb-4 mb-md-0">
+                                    <label for="whatsapp" class="form-label fw-medium">Nomor WhatsApp <span class="text-danger">*</span></label>
+                                    <input type="tel" class="form-control form-control-custom" id="whatsapp" placeholder="Contoh: 08123456789" required>
+                                    <div class="invalid-feedback">Masukkan nomor WhatsApp yang valid (hanya angka).</div>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="email" class="form-label fw-medium">Email <span class="text-danger">*</span></label>
+                                    <input type="email" class="form-control form-control-custom" id="email" placeholder="contoh@email.com" required>
+                                    <div class="invalid-feedback">Format email tidak valid.</div>
+                                </div>
+                            </div>
+
+                            <div class="mb-5">
+                                <label for="instagram" class="form-label fw-medium">Username Instagram <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text border-end-0 bg-white text-muted" id="basic-addon1">@</span>
+                                    <input type="text" class="form-control form-control-custom border-start-0 ps-0" id="instagram" placeholder="username" required>
+                                    <div class="invalid-feedback">Username Instagram wajib diisi.</div>
+                                </div>
+                            </div>
+                            
+                            <hr class="mb-4 opacity-25">
+                            
+                            <h5 class="fw-bold mb-3">Pengalaman Kerja</h5>
+
+                            <div class="mb-4">
+                                <label class="form-label fw-medium d-block">Apakah pernah menjadi kru event?</label>
+                                <div class="d-flex gap-4">
+                                    <div class="form-check custom-radio">
+                                        <input class="form-check-input" type="radio" name="expEvent" id="expEventYes" value="Ya" required>
+                                        <label class="form-check-label" for="expEventYes">Ya</label>
+                                    </div>
+                                    <div class="form-check custom-radio">
+                                        <input class="form-check-input" type="radio" name="expEvent" id="expEventNo" value="Tidak" checked required>
+                                        <label class="form-check-label" for="expEventNo">Tidak</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label fw-medium d-block">Apakah pernah bekerja di photobooth?</label>
+                                <div class="d-flex gap-4">
+                                    <div class="form-check custom-radio">
+                                        <input class="form-check-input" type="radio" name="expPhoto" id="expPhotoYes" value="Ya" required>
+                                        <label class="form-check-label" for="expPhotoYes">Ya</label>
+                                    </div>
+                                    <div class="form-check custom-radio">
+                                        <input class="form-check-input" type="radio" name="expPhoto" id="expPhotoNo" value="Tidak" checked required>
+                                        <label class="form-check-label" for="expPhotoNo">Tidak</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label fw-medium mb-3">Keahlian (Pilih yang sesuai)</label>
+                                <div class="row g-3">
+                                    <div class="col-sm-6">
+                                        <div class="form-check custom-checkbox">
+                                            <input class="form-check-input skill-check" type="checkbox" value="Fotografi" id="skill1" name="skills">
+                                            <label class="form-check-label" for="skill1">Fotografi</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-check custom-checkbox">
+                                            <input class="form-check-input skill-check" type="checkbox" value="Komunikasi" id="skill2" name="skills">
+                                            <label class="form-check-label" for="skill2">Komunikasi</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-check custom-checkbox">
+                                            <input class="form-check-input skill-check" type="checkbox" value="Public Speaking" id="skill3" name="skills">
+                                            <label class="form-check-label" for="skill3">Public Speaking</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-check custom-checkbox">
+                                            <input class="form-check-input skill-check" type="checkbox" value="Customer Service" id="skill4" name="skills">
+                                            <label class="form-check-label" for="skill4">Customer Service</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-check custom-checkbox">
+                                            <input class="form-check-input skill-check" type="checkbox" value="Editing" id="skill5" name="skills">
+                                            <label class="form-check-label" for="skill5">Editing</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-check custom-checkbox">
+                                            <input class="form-check-input skill-check" type="checkbox" value="Mengemudi" id="skill6" name="skills">
+                                            <label class="form-check-label" for="skill6">Mengemudi</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <div class="form-check custom-checkbox">
+                                            <input class="form-check-input skill-check" type="checkbox" value="Lainnya" id="skill7" name="skills" onchange="document.getElementById('skillLainnyaWrapper').classList.toggle('d-none', !this.checked)">
+                                            <label class="form-check-label" for="skill7">Lainnya</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-12 mt-3 d-none" id="skillLainnyaWrapper">
+                                        <input type="text" class="form-control form-control-custom" id="skillLainnyaInput" placeholder="Sebutkan skill lainnya (pisahkan dengan koma)...">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <hr class="mb-4 opacity-25">
+
+                            <div class="mb-4">
+                                <label for="expectedHonor" class="form-label fw-medium">Honor per project <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <span class="input-group-text border-end-0 bg-white text-muted">Rp</span>
+                                    <input type="text" class="form-control form-control-custom border-start-0 ps-0" id="expectedHonor" placeholder="Berapa ekspektasi honor per project yang kamu harapkan?" required>
+                                    <div class="invalid-feedback">Harap isi ekspektasi honor per project.</div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex flex-column-reverse flex-sm-row gap-3 justify-content-between mt-5">
+                                <button type="button" class="btn btn-outline-secondary btn-prev d-inline-flex align-items-center justify-content-center"><i class="fa-solid fa-arrow-left me-2"></i> Sebelumnya</button>
+                                <button type="button" class="btn btn-accent btn-next d-inline-flex align-items-center justify-content-center">Selanjutnya <i class="fa-solid fa-arrow-right ms-2"></i></button>
+                            </div>
+                        </div>
+
+                        <!-- STEP 3: Ketersediaan & Dokumen -->
+                        <div class="form-step d-none" id="step3">
+                            <h4 class="fw-bold mb-4">3. Ketersediaan & Dokumen</h4>
+
+                            <div class="mb-4">
+                                <label class="form-label fw-medium d-block">Apakah memiliki kendaraan pribadi?</label>
+                                <div class="d-flex gap-4">
+                                    <div class="form-check custom-radio">
+                                        <input class="form-check-input" type="radio" name="vehicle" id="vehicleYes" value="Ya" checked required>
+                                        <label class="form-check-label" for="vehicleYes">Ya</label>
+                                    </div>
+                                    <div class="form-check custom-radio">
+                                        <input class="form-check-input" type="radio" name="vehicle" id="vehicleNo" value="Tidak" required>
+                                        <label class="form-check-label" for="vehicleNo">Tidak</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label fw-medium d-block">Bersedia bekerja pada malam hari?</label>
+                                <div class="d-flex gap-4">
+                                    <div class="form-check custom-radio">
+                                        <input class="form-check-input" type="radio" name="nightShift" id="nightYes" value="Ya" checked required>
+                                        <label class="form-check-label" for="nightYes">Ya</label>
+                                    </div>
+                                    <div class="form-check custom-radio">
+                                        <input class="form-check-input" type="radio" name="nightShift" id="nightNo" value="Tidak" required>
+                                        <label class="form-check-label" for="nightNo">Tidak</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label fw-medium d-block">Bersedia bekerja saat akhir pekan?</label>
+                                <div class="d-flex gap-4">
+                                    <div class="form-check custom-radio">
+                                        <input class="form-check-input" type="radio" name="weekend" id="weekendYes" value="Ya" checked required>
+                                        <label class="form-check-label" for="weekendYes">Ya</label>
+                                    </div>
+                                    <div class="form-check custom-radio">
+                                        <input class="form-check-input" type="radio" name="weekend" id="weekendNo" value="Tidak" required>
+                                        <label class="form-check-label" for="weekendNo">Tidak</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mb-5">
+                                <label class="form-label fw-medium d-block">Bersedia bekerja di luar kota?</label>
+                                <div class="d-flex gap-4">
+                                    <div class="form-check custom-radio">
+                                        <input class="form-check-input" type="radio" name="outOfTown" id="outOfTownYes" value="Ya" required>
+                                        <label class="form-check-label" for="outOfTownYes">Ya</label>
+                                    </div>
+                                    <div class="form-check custom-radio">
+                                        <input class="form-check-input" type="radio" name="outOfTown" id="outOfTownNo" value="Tidak" checked required>
+                                        <label class="form-check-label" for="outOfTownNo">Tidak</label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <hr class="mb-4 opacity-25">
+
+                            <h5 class="fw-bold mb-3">Upload Curriculum Vitae (CV)</h5>
+                            <p class="text-muted small mb-4">Pastikan CV yang diunggah merupakan versi terbaru. Format PDF (Maks. 20 MB).</p>
+
+                            <div class="custom-file-upload border border-2 border-dashed rounded-4 p-5 text-center position-relative mb-2 transition-all bg-light hover-bg-gray">
+                                <input type="file" id="cvFile" accept=".pdf" class="position-absolute top-0 start-0 w-100 h-100 opacity-0" title="Upload CV" aria-label="Upload CV" required>
+                                <div id="uploadPlaceholder">
+                                    <div class="upload-icon mb-3 text-primary">
+                                        <i class="fa-solid fa-cloud-arrow-up fs-1"></i>
+                                    </div>
+                                    <h6 class="fw-bold mb-1">Pilih File atau Drag & Drop</h6>
+                                    <p class="small text-muted mb-0">Hanya format .PDF yang diizinkan</p>
+                                </div>
+                                <div id="uploadSuccess" class="d-none">
+                                    <div class="upload-icon mb-3 text-success">
+                                        <i class="fa-solid fa-file-circle-check fs-1"></i>
+                                    </div>
+                                    <h6 class="fw-bold mb-1 text-success">Berhasil dipilih!</h6>
+                                    <p class="small text-muted mb-0 fw-medium" id="fileNameDisplay">nama-file.pdf</p>
+                                    <p class="small text-muted mb-0" id="fileSizeDisplay">2.5 MB</p>
+                                </div>
+                            </div>
+                            <div class="invalid-feedback mt-2" id="fileError">Harap unggah CV (PDF) maksimal 20 MB.</div>
+
+                            <div class="d-flex flex-column-reverse flex-sm-row gap-3 justify-content-between mt-5">
+                                <button type="button" class="btn btn-outline-secondary btn-prev"><i class="fa-solid fa-arrow-left me-2"></i> Sebelumnya</button>
+                                <button type="button" class="btn btn-accent btn-next">Selanjutnya <i class="fa-solid fa-arrow-right ms-2"></i></button>
+                            </div>
+                        </div>
+
+                        <!-- STEP 4: Konfirmasi -->
+                        <div class="form-step d-none" id="step4">
+                            <h4 class="fw-bold mb-4">4. Konfirmasi</h4>
+                            <p class="text-muted mb-4">Silakan periksa kembali ringkasan data yang telah Anda isi sebelum mengirim pendaftaran.</p>
+
+                            <div class="summary-card bg-light rounded-4 p-4 mb-4 border">
+                                <div class="row g-3">
+                                    <div class="col-sm-4 text-muted small">Nama Lengkap</div>
+                                    <div class="col-sm-8 fw-medium" id="sumName">-</div>
+                                    
+                                    <div class="col-sm-4 text-muted small">TTL / Umur</div>
+                                    <div class="col-sm-8 fw-medium" id="sumAge">-</div>
+                                    
+                                    <div class="col-sm-4 text-muted small">Kontak</div>
+                                    <div class="col-sm-8 fw-medium" id="sumContact">-</div>
+
+                                    <div class="col-sm-4 text-muted small">Pengalaman Event</div>
+                                    <div class="col-sm-8 fw-medium" id="sumEvent">-</div>
+                                    
+                                    <div class="col-sm-4 text-muted small">Keahlian</div>
+                                    <div class="col-sm-8 fw-medium" id="sumSkills">-</div>
+
+                                    <div class="col-sm-4 text-muted small">Ketersediaan Waktu</div>
+                                    <div class="col-sm-8 fw-medium" id="sumAvail">-</div>
+
+                                    <div class="col-sm-4 text-muted small">Dokumen CV</div>
+                                    <div class="col-sm-8 fw-medium text-primary"><i class="fa-solid fa-file-pdf me-1"></i> <span id="sumCv">-</span></div>
+                                </div>
+                            </div>
+
+                            <div class="form-check custom-checkbox mb-4">
+                                <input class="form-check-input" type="checkbox" id="agreeCheck" required>
+                                <label class="form-check-label text-muted" for="agreeCheck">
+                                    Saya menyatakan bahwa seluruh data yang saya isi adalah benar dan dapat dipertanggungjawabkan.
+                                </label>
+                                <div class="invalid-feedback">Anda harus menyetujui pernyataan ini untuk mendaftar.</div>
+                            </div>
+
+                            <div class="d-flex flex-column-reverse flex-sm-row gap-3 justify-content-between mt-5">
+                                <button type="button" class="btn btn-outline-secondary btn-prev d-inline-flex align-items-center justify-content-center"><i class="fa-solid fa-arrow-left me-2"></i> Sebelumnya</button>
+                                <button type="button" class="btn btn-accent d-inline-flex align-items-center justify-content-center" id="btnSubmit">Kirim Pendaftaran <i class="fa-solid fa-paper-plane ms-2"></i></button>
+                            </div>
+                        </div>
+
+                    </form>
+
+                    <!-- Success State -->
+                    <div class="success-state text-center d-none py-5 my-md-5" id="successState">
+                        <div class="mb-4">
+                            <i class="fa-solid fa-circle-check text-success display-1"></i>
+                        </div>
+                        <h2 class="fw-bold mb-3">Pendaftaran Berhasil!</h2>
+                        <p class="text-muted mb-4 max-w-600 mx-auto">
+                            Terima kasih telah mendaftarkan diri sebagai calon kru Potra Photobooth. Tim kami akan melakukan proses seleksi administrasi terlebih dahulu. Apabila Anda lolos ke tahap berikutnya, kami akan menghubungi melalui WhatsApp atau Email.
+                        </p>
+                        <a href="index.html" class="btn btn-outline-primary-custom mt-2 d-inline-flex align-items-center justify-content-center"><i class="fa-solid fa-house me-2"></i> Kembali ke Beranda</a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 10. Footer -->
+<footer class="footer mt-auto">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 mb-5 mb-lg-0 pe-lg-5">
+                <div class="mb-4 d-flex align-items-center gap-2">
+                    <img src="assets/img/logo.png" alt="PotraCrew Logo" class="footer-logo-img">
+                    <span class="fs-4 fw-bold text-primary">PotraCrew</span>
+                </div>
+                <p class="text-muted small mb-4">Layanan photobooth premium di Bali yang berdedikasi mengabadikan momen kebahagiaan Anda. Bergabunglah dan wujudkan visi kreatif bersama kami.</p>
+                <div class="social-icons">
+                    <a href="https://instagram.com/potraphotobooth" target="_blank" rel="noopener noreferrer" title="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="https://wa.me/6287803264659" target="_blank" rel="noopener noreferrer" title="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+                    <a href="mailto:potraphotoboothbali@gmail.com" title="Email"><i class="fa-regular fa-envelope"></i></a>
+                </div>
+            </div>
+            
+            <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
+                <h5 class="footer-title">Tentang</h5>
+                <a href="index.html#tentang" class="footer-link">Perusahaan</a>
+                <a href="index.html#budaya" class="footer-link">Budaya Kerja</a>
+                <a href="index.html#galeri" class="footer-link">Galeri Event</a>
+            </div>
+            
+            <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
+                <h5 class="footer-title">Quick Links</h5>
+                <a href="index.html#keuntungan" class="footer-link">Keuntungan</a>
+                <a href="index.html#rekrutmen" class="footer-link">Proses Rekrutmen</a>
+                <a href="index.html#faq" class="footer-link">FAQ</a>
+            </div>
+            
+            <div class="col-lg-4 col-md-4">
+                <h5 class="footer-title">Kontak</h5>
+                <p class="text-muted small mb-2"><i class="fa-solid fa-location-dot me-2 text-accent"></i> Denpasar, Bali, Indonesia</p>
+                <p class="text-muted small mb-2"><i class="fa-brands fa-whatsapp me-2 text-accent"></i> +6287803264659</p>
+                <p class="text-muted small mb-0"><i class="fa-regular fa-envelope me-2 text-accent"></i> potraphotoboothbali@gmail.com</p>
+            </div>
+        </div>
+        
+        <div class="border-top border-secondary opacity-25 my-4"></div>
+        
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
+            <p class="text-muted small mb-0">&copy; 2026 Potra Photobooth. Hak Cipta Dilindungi.</p>
+        </div>
+    </div>
+</footer>
+
+<!-- Bootstrap 5 JS Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- Custom JS -->
+<script src="assets/js/main.js"></script>
+</body>
+</html>

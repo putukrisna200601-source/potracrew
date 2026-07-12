@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="google" content="notranslate">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="view-transition" content="same-origin">
+    <title>Dashboard - PotraCrew Admin</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="../assets/img/logo.png" type="image/png">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome (Icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Bootstrap Grid (Only Grid & Utilities, UI is Custom) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap-grid.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap-utilities.min.css" rel="stylesheet">
+    
+    <!-- Custom Admin CSS (Shadcn Enterprise Style) -->
+    <link rel="stylesheet" href="../assets/css/admin.css">
+</head>
+<body>
+
+<div class="admin-layout">
+    <!-- Mesh Gradient Background -->
+    <div class="mesh-bg">
+        <div class="bg-shape shape-1"></div>
+        <div class="bg-shape shape-2"></div>
+        <div class="bg-shape shape-3"></div>
+    </div>
+    <!-- Overlay for mobile sidebar -->
+    <div id="sidebarOverlay" class="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 z-3 d-none"></div>
+
+    <!-- 1. Left Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="#" class="sidebar-logo">
+                <img src="../assets/img/logo.png" alt="PotraCrew Logo">
+                Potra<span>Crew</span>
+            </a>
+        </div>
+        
+        <div class="sidebar-content">
+            <div class="sidebar-section-title">Rekrutmen</div>
+            <a href="index.html" class="sidebar-nav-item active">
+                <i class="fa-solid fa-house"></i> Dashboard
+            </a>
+            <a href="data_pelamar.html" class="sidebar-nav-item">
+                <i class="fa-solid fa-users"></i> Data Pelamar
+            </a>
+            <a href="penilaian.html" class="sidebar-nav-item">
+                <i class="fa-solid fa-clipboard-user"></i> Penilaian Wawancara
+            </a>
+            <a href="arsip.html" class="sidebar-nav-item">
+                <i class="fa-solid fa-box-archive"></i> Arsip Pelamar
+            </a>
+            
+            <div class="sidebar-section-title mt-4">Keputusan (SPK)</div>
+            <a href="master_kriteria.html" class="sidebar-nav-item">
+                <i class="fa-solid fa-layer-group"></i> Kriteria & Bobot
+            </a>
+            <a href="perhitungan.html" class="sidebar-nav-item">
+                <i class="fa-solid fa-calculator"></i> Perhitungan SAW
+            </a>
+            <a href="keputusan.html" class="sidebar-nav-item">
+                <i class="fa-solid fa-medal"></i> Keputusan Rekrutmen
+            </a>
+            
+        </div>
+        
+        <div class="sidebar-footer">
+<a href="login.html" class="sidebar-nav-item text-danger">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+            </a>
+        </div>
+    </aside>
+
+    <!-- 2. Main Wrapper -->
+    <main class="main-wrapper">
+        <!-- Top Navigation -->
+        <header class="topbar">
+            <div class="d-flex align-items-center gap-3">
+                <button class="icon-btn mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle Mobile Menu">
+                    <i class="fa-solid fa-bars" aria-hidden="true"></i>
+                </button>
+                <div class="breadcrumb-nav d-none d-md-flex">
+                    <span class="text-muted">PotraCrew</span>
+                    <i class="fa-solid fa-chevron-right text-xs opacity-50"></i>
+                    <span class="current">Dashboard</span>
+                </div>
+            </div>
+            
+            <div class="topbar-actions">
+                <div class="search-box d-none d-lg-block">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" placeholder="Cari pelamar atau laporan...">
+                </div>
+                
+                <div class="profile-avatar" title="Administrator">A</div>
+            </div>
+        </header>
+
+        <!-- Content Area -->
+        <div class="content-area">
+            
+            <!-- Row 1: Greeting -->
+            <div class="page-header d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-3">
+                <div>
+                    <h1 class="page-title"><span id="greetingText">Halo, Selamat Pagi</span></h1>
+                    <p class="page-description">Selamat datang kembali di Sistem Rekrutmen Internal Potra Photobooth.</p>
+                </div>
+                <div class="text-muted text-sm d-flex align-items-center gap-2 font-medium">
+                    <i class="fa-regular fa-calendar"></i>
+                    <span id="currentDate">Senin, 24 Juli 2026</span>
+                </div>
+            </div>
+
+            <!-- Row 3: Recruitment Summary (KPI Cards) -->
+            <div class="row g-4 mb-4">
+                <div class="col-12 col-md-6 col-xl-3">
+                    <div class="s-card kpi-card">
+                        <div class="s-card-header row-layout pb-2">
+                            <div class="s-card-title">Total Pelamar</div>
+                            <i class="fa-solid fa-users text-muted opacity-50"></i>
+                        </div>
+                        <div class="s-card-content">
+                            <div class="kpi-value" id="kpiTotal">-</div>
+                            <div class="kpi-subtext text-muted">Keseluruhan pendaftar</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-xl-3">
+                    <div class="s-card kpi-card">
+                        <div class="s-card-header row-layout pb-2">
+                            <div class="s-card-title">Dievaluasi</div>
+                            <i class="fa-regular fa-file-lines text-muted opacity-50"></i>
+                        </div>
+                        <div class="s-card-content">
+                            <div class="kpi-value" id="kpiEvaluated">-</div>
+                            <div class="kpi-subtext text-warning"><i class="fa-solid fa-circle-exclamation text-xs"></i> Siap untuk dihitung SAW</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-xl-3">
+                    <div class="s-card kpi-card">
+                        <div class="s-card-header row-layout pb-2">
+                            <div class="s-card-title">Diterima</div>
+                            <i class="fa-solid fa-check text-muted opacity-50"></i>
+                        </div>
+                        <div class="s-card-content">
+                            <div class="kpi-value text-success" id="kpiAccepted">-</div>
+                            <div class="kpi-subtext">Kandidat yang telah lolos</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-xl-3">
+                    <div class="s-card kpi-card">
+                        <div class="s-card-header row-layout pb-2">
+                            <div class="s-card-title">Ditolak</div>
+                            <i class="fa-solid fa-xmark text-muted opacity-50"></i>
+                        </div>
+                        <div class="s-card-content">
+                            <div class="kpi-value text-danger" id="kpiRejected">-</div>
+                            <div class="kpi-subtext">Kandidat yang tidak lolos</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 4: Charts and Tables -->
+            <div class="row g-4 mb-4">
+                <!-- Progress & Chart -->
+                <div class="col-12 col-xl-6">
+                    <div class="s-card h-100">
+                        <div class="s-card-header">
+                            <h2 class="s-card-title">Recruitment Progress</h2>
+                            <p class="s-card-description">Konversi pelamar dari awal pendaftaran hingga diterima.</p>
+                        </div>
+                        <div class="s-card-content d-flex flex-column gap-4">
+                            <!-- Visual Funnel Progress -->
+                            <div class="progress-wrapper mt-0">
+                                <div class="progress-label-row">
+                                    <span class="progress-label">1. Administrasi (Pelamar Masuk)</span>
+                                    <span class="progress-percent" id="funnelPercent1">124 (100%)</span>
+                                </div>
+                                <div class="progress-bar-bg">
+                                    <div class="progress-bar-fill progress-step-1" id="funnelBar1"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="progress-wrapper mt-0">
+                                <div class="progress-label-row">
+                                    <span class="progress-label">2. Wawancara (Shortlist)</span>
+                                    <span class="progress-percent" id="funnelPercent2">45 (36%)</span>
+                                </div>
+                                <div class="progress-bar-bg">
+                                    <div class="progress-bar-fill progress-step-2" id="funnelBar2"></div>
+                                </div>
+                            </div>
+
+                            <div class="progress-wrapper mt-0">
+                                <div class="progress-label-row">
+                                    <span class="progress-label">3. Penilaian SAW Selesai</span>
+                                    <span class="progress-percent" id="funnelPercent3">20 (16%)</span>
+                                </div>
+                                <div class="progress-bar-bg">
+                                    <div class="progress-bar-fill progress-step-3" id="funnelBar3"></div>
+                                </div>
+                            </div>
+
+                            <div class="progress-wrapper mt-0">
+                                <div class="progress-label-row">
+                                    <span class="progress-label">4. Keputusan (Diterima)</span>
+                                    <span class="progress-percent" id="funnelPercent4">5 (4%)</span>
+                                </div>
+                                <div class="progress-bar-bg">
+                                    <div class="progress-bar-fill progress-step-4" id="funnelBar4"></div>
+                                </div>
+                            </div>
+
+                            <!-- Small Chart (Mockup) -->
+                            <div class="mt-4 pt-4 border-top">
+                                <h3 class="font-semibold text-sm mb-3">Tren Pelamar Bulanan</h3>
+                                <div class="chart-wrapper">
+                                    <canvas id="applicantsChart"></canvas>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Top Candidates -->
+                <div class="col-12 col-xl-6">
+                    <div class="s-card h-100">
+                        <div class="s-card-header row-layout">
+                            <div>
+                                <h2 class="s-card-title">Top 5 Kandidat Terbaik</h2>
+                                <p class="s-card-description">Pratinjau langsung berdasarkan hasil perankingan SAW terbaru.</p>
+                            </div>
+                        </div>
+                        <div class="s-card-content p-0">
+                            <div class="s-table-wrapper">
+                                <table class="s-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Rank</th>
+                                            <th>Kandidat</th>
+                                            <th>Nilai Akhir (V)</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="font-bold text-primary">#1</td>
+                                            <td>
+                                                <div class="cand-info">
+                                                    <div class="cand-avatar">IP</div>
+                                                    <div>
+                                                        <div class="cand-name">Iqbal Pratama</div>
+                                                        <div class="cand-email">iqbal@example.com</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="font-medium">0.875</td>
+                                            <td><span class="s-badge s-badge-success">Direkomendasikan</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="font-bold text-muted">#2</td>
+                                            <td>
+                                                <div class="cand-info">
+                                                    <div class="cand-avatar">SN</div>
+                                                    <div>
+                                                        <div class="cand-name">Sarah Nabila</div>
+                                                        <div class="cand-email">sarah@example.com</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="font-medium">0.842</td>
+                                            <td><span class="s-badge s-badge-success">Direkomendasikan</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="font-bold text-muted">#3</td>
+                                            <td>
+                                                <div class="cand-info">
+                                                    <div class="cand-avatar">RA</div>
+                                                    <div>
+                                                        <div class="cand-name">Rizky Adiputra</div>
+                                                        <div class="cand-email">rizky@example.com</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="font-medium">0.810</td>
+                                            <td><span class="s-badge s-badge-primary">Pertimbangkan</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="font-bold text-muted">#4</td>
+                                            <td>
+                                                <div class="cand-info">
+                                                    <div class="cand-avatar">DW</div>
+                                                    <div>
+                                                        <div class="cand-name">Dian Wijaya</div>
+                                                        <div class="cand-email">dian@example.com</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="font-medium">0.765</td>
+                                            <td><span class="s-badge s-badge-default">Standar</span></td>
+                                        </tr>
+                                        <tr>
+                                            <td class="font-bold text-muted">#5</td>
+                                            <td>
+                                                <div class="cand-info">
+                                                    <div class="cand-avatar">BP</div>
+                                                    <div>
+                                                        <div class="cand-name">Budi Prakoso</div>
+                                                        <div class="cand-email">budi@example.com</div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="font-medium">0.720</td>
+                                            <td><span class="s-badge s-badge-default">Standar</span></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div> <!-- End Content Area -->
+    </main>
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<!-- Custom Admin JS -->
+<script src="../assets/js/admin.js"></script>
+
+</body>
+</html>
+

@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="google" content="notranslate">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="view-transition" content="same-origin">
+    <title>Data Pelamar - PotraCrew Admin</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="../assets/img/logo.png" type="image/png">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome (Icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Bootstrap Grid (Only Grid & Utilities, UI is Custom) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap-grid.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap-utilities.min.css" rel="stylesheet">
+    
+    <!-- Custom Admin CSS (Shadcn Enterprise Style) -->
+    <link rel="stylesheet" href="../assets/css/admin.css">
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+
+<div class="admin-layout">
+    <!-- Mesh Gradient Background -->
+    <div class="mesh-bg">
+        <div class="bg-shape shape-1"></div>
+        <div class="bg-shape shape-2"></div>
+        <div class="bg-shape shape-3"></div>
+    </div>
+    <!-- Overlay for mobile sidebar -->
+    <div id="sidebarOverlay" class="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 z-3 d-none"></div>
+
+    <!-- 1. Left Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="#" class="sidebar-logo">
+                <img src="../assets/img/logo.png" alt="PotraCrew Logo">
+                Potra<span>Crew</span>
+            </a>
+        </div>
+        
+        <div class="sidebar-content">
+            <div class="sidebar-section-title">Rekrutmen</div>
+            <a href="index.html" class="sidebar-nav-item">
+                <i class="fa-solid fa-house"></i> Dashboard
+            </a>
+            <a href="data_pelamar.html" class="sidebar-nav-item active">
+                <i class="fa-solid fa-users"></i> Data Pelamar
+            </a>
+            <a href="penilaian.html" class="sidebar-nav-item">
+                <i class="fa-solid fa-clipboard-user"></i> Penilaian Wawancara
+            </a>
+            <a href="arsip.html" class="sidebar-nav-item">
+                <i class="fa-solid fa-box-archive"></i> Arsip Pelamar
+            </a>
+            
+            <div class="sidebar-section-title mt-4">Keputusan (SPK)</div>
+            <a href="master_kriteria.html" class="sidebar-nav-item">
+                <i class="fa-solid fa-layer-group"></i> Kriteria & Bobot
+            </a>
+            <a href="perhitungan.html" class="sidebar-nav-item">
+                <i class="fa-solid fa-calculator"></i> Perhitungan SAW
+            </a>
+            <a href="keputusan.html" class="sidebar-nav-item">
+                <i class="fa-solid fa-medal"></i> Keputusan Rekrutmen
+            </a>
+            
+        </div>
+        
+        <div class="sidebar-footer">
+<a href="login.html" class="sidebar-nav-item text-danger">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+            </a>
+        </div>
+    </aside>
+
+    <!-- 2. Main Wrapper -->
+    <main class="main-wrapper">
+        <!-- Top Navigation -->
+        <header class="topbar">
+            <div class="d-flex align-items-center gap-3">
+                <button class="icon-btn mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle Mobile Menu">
+                    <i class="fa-solid fa-bars" aria-hidden="true"></i>
+                </button>
+                <div class="breadcrumb-nav d-none d-md-flex">
+                    <span class="text-muted">PotraCrew</span>
+                    <i class="fa-solid fa-chevron-right text-xs opacity-50"></i>
+                    <span class="current">Data Pelamar</span>
+                </div>
+            </div>
+            
+            <div class="topbar-actions">
+                <div class="search-box d-none d-lg-block">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" placeholder="Cari pelamar atau laporan...">
+                </div>
+                
+<div class="profile-avatar" title="Administrator">A</div>
+            </div>
+        </header>
+
+        <!-- Content Area -->
+        <div class="content-area">
+            
+            <!-- Row 1: Header -->
+            <div class="page-header d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-3">
+                <div>
+                    <h1 class="page-title">Data Pelamar</h1>
+                    <p class="page-description">Kelola seluruh calon kru Potra Photobooth yang telah melakukan pendaftaran secara online.</p>
+                </div>
+                <!-- Action Button Optional (e.g. Refresh Data) -->
+                <div>
+                </div>
+            </div>
+
+            <!-- Row 2: Summary Cards -->
+            <div class="row g-4 mb-4" id="summaryCardsContainer">
+                <div class="col-12 col-md-6 col-xl-3">
+                    <div class="s-card kpi-card">
+                        <div class="s-card-header row-layout pb-2">
+                            <div class="s-card-title">Jumlah Pelamar</div>
+                            <i class="fa-solid fa-users text-muted opacity-50"></i>
+                        </div>
+                        <div class="s-card-content">
+                            <div class="kpi-value" id="val-total">42</div>
+                            <div class="kpi-subtext text-muted">Total pendaftar masuk</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-xl-3">
+                    <div class="s-card kpi-card">
+                        <div class="s-card-header row-layout pb-2">
+                            <div class="s-card-title">Menunggu Verifikasi</div>
+                            <i class="fa-regular fa-clock text-warning opacity-75"></i>
+                        </div>
+                        <div class="s-card-content">
+                            <div class="kpi-value text-warning" id="val-waiting">15</div>
+                            <div class="kpi-subtext">Perlu ditinjau secara administratif</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-xl-3">
+                    <div class="s-card kpi-card">
+                        <div class="s-card-header row-layout pb-2">
+                            <div class="s-card-title">Lolos Administrasi</div>
+                            <i class="fa-solid fa-check text-success opacity-75"></i>
+                        </div>
+                        <div class="s-card-content">
+                            <div class="kpi-value text-success" id="val-passed">20</div>
+                            <div class="kpi-subtext">Menunggu proses interview</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6 col-xl-3">
+                    <div class="s-card kpi-card">
+                        <div class="s-card-header row-layout pb-2">
+                            <div class="s-card-title">Tidak Lolos</div>
+                            <i class="fa-solid fa-xmark text-danger opacity-75"></i>
+                        </div>
+                        <div class="s-card-content">
+                            <div class="kpi-value text-danger" id="val-failed">7</div>
+                            <div class="kpi-subtext">Pelamar gugur administratif</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 3: Toolbar (Search & Filters) -->
+            <div class="s-card card-static mb-4" id="toolbarContainer">
+                <div class="s-card-content p-3 d-flex flex-column flex-xl-row gap-3">
+                    <!-- Search -->
+                    <div class="flex-grow-1">
+                        <div class="search-box m-0 w-100">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" id="filterSearch" placeholder="Cari berdasarkan nama, email, atau no HP...">
+                        </div>
+                    </div>
+                    
+                    <!-- Filters -->
+                    <div class="d-flex flex-wrap gap-2">
+                        <select class="s-select" id="filterStatus" title="Filter Status Lamaran" aria-label="Filter Status Lamaran">
+                            <option value="">Status Lamaran</option>
+                            <option value="menunggu">Menunggu Verifikasi Administrasi</option>
+                            <option value="lolos">Lolos Administrasi</option>
+                            <option value="gagal">Tidak Lolos Administrasi</option>
+                        </select>
+                        
+                        <select class="s-select" id="filterPendidikan" title="Filter Pendidikan" aria-label="Filter Pendidikan">
+                            <option value="">Pendidikan</option>
+                            <option value="sma">SMA/SMK</option>
+                            <option value="d3">D3</option>
+                            <option value="s1">S1</option>
+                        </select>
+                        
+                        <select class="s-select" id="filterUmur" title="Filter Rentang Umur" aria-label="Filter Rentang Umur">
+                            <option value="">Rentang Umur</option>
+                            <option value="18-22">18-22 Tahun</option>
+                            <option value="23-28">23-28 Tahun</option>
+                        </select>
+
+                        <select class="s-select bg-muted font-medium" id="filterSort" title="Urutkan Data" aria-label="Urutkan Data">
+                            <option value="date_desc">Urutkan: Tanggal Daftar</option>
+                            <option value="name_asc">Urutkan: Nama (A-Z)</option>
+                            <option value="honor_asc">Urutkan: Honor</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 4: Enterprise Data Table -->
+            <div class="s-card card-static">
+                <div class="s-card-content p-0 relative">
+                    <div class="s-table-wrapper" id="pelamarTableContainer">
+                        <table class="s-table ats-table" id="pelamarTable">
+                            <thead>
+                                <tr>
+                                    <th>Nama Kandidat</th>
+                                    <th>Umur</th>
+                                    <th>Pendidikan</th>
+                                    <th>Honor per Event</th>
+                                    <th>Tanggal Melamar</th>
+                                    <th>Status</th>
+                                    <th class="text-end min-w-120">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody">
+                                <!-- Dummy Data Rows -->
+                                <tr>
+                                    <td data-label="Kandidat">
+                                        <div class="cand-info">
+                                            <div class="cand-avatar bg-amber-100 text-amber-700">RA</div>
+                                            <div>
+                                                <div class="cand-name font-medium">Reza Adhitya</div>
+                                                <div class="cand-email text-xs text-muted">reza.adhit@email.com <br> 0812-3456-7890</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td data-label="Umur">22 Tahun</td>
+                                    <td data-label="Pendidikan">S1</td>
+                                    <td data-label="Honor per Event" class="font-medium">Rp 250.000</td>
+                                    <td data-label="Tanggal Melamar" class="text-muted">15 Jul 2026</td>
+                                    <td data-label="Status"><span class="s-badge s-badge-warning"><span class="status-dot bg-warning"></span> Menunggu Verifikasi Administrasi</span></td>
+                                    <td class="text-end">
+                                        <button class="s-btn s-btn-outline s-btn-sm" onclick="window.location.href='detail_pelamar.html'">Lihat Detail</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td data-label="Kandidat">
+                                        <div class="cand-info">
+                                            <div class="cand-avatar bg-emerald-100 text-emerald-700">SN</div>
+                                            <div>
+                                                <div class="cand-name font-medium">Sarah Nabila</div>
+                                                <div class="cand-email text-xs text-muted">sarah.n@email.com <br> 0821-4567-8901</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td data-label="Umur">20 Tahun</td>
+                                    <td data-label="Pendidikan">SMA/SMK</td>
+                                    <td data-label="Honor per Event" class="font-medium">Rp 200.000</td>
+                                    <td data-label="Tanggal Melamar" class="text-muted">14 Jul 2026</td>
+                                    <td data-label="Status"><span class="s-badge s-badge-success"><span class="status-dot bg-success"></span> Lolos Administrasi</span></td>
+                                    <td class="text-end">
+                                        <button class="s-btn s-btn-outline s-btn-sm" onclick="window.location.href='detail_pelamar.html'">Lihat Detail</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td data-label="Kandidat">
+                                        <div class="cand-info">
+                                            <div class="cand-avatar bg-rose-100 text-rose-700">DW</div>
+                                            <div>
+                                                <div class="cand-name font-medium">Dian Wijaya</div>
+                                                <div class="cand-email text-xs text-muted">dianwjy@email.com <br> 0852-1234-5678</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td data-label="Umur">26 Tahun</td>
+                                    <td data-label="Pendidikan">D3</td>
+                                    <td data-label="Honor per Event" class="font-medium">Rp 300.000</td>
+                                    <td data-label="Tanggal Melamar" class="text-muted">12 Jul 2026</td>
+                                    <td data-label="Status"><span class="s-badge s-badge-destructive"><span class="status-dot bg-danger"></span> Tidak Lolos Administrasi</span></td>
+                                    <td class="text-end">
+                                        <button class="s-btn s-btn-outline s-btn-sm" onclick="window.location.href='detail_pelamar.html'">Lihat Detail</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td data-label="Kandidat">
+                                        <div class="cand-info">
+                                            <div class="cand-avatar bg-indigo-100 text-indigo-700">BP</div>
+                                            <div>
+                                                <div class="cand-name font-medium">Budi Prakoso</div>
+                                                <div class="cand-email text-xs text-muted">budi.p@email.com <br> 0813-9876-5432</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td data-label="Umur">24 Tahun</td>
+                                    <td data-label="Pendidikan">S1</td>
+                                    <td data-label="Honor per Event" class="font-medium">Rp 250.000</td>
+                                    <td data-label="Tanggal Melamar" class="text-muted">10 Jul 2026</td>
+                                    <td data-label="Status"><span class="s-badge s-badge-indigo"><span class="status-dot bg-indigo"></span> Menunggu Interview</span></td>
+                                    <td class="text-end">
+                                        <button class="s-btn s-btn-outline s-btn-sm" onclick="window.location.href='detail_pelamar.html'">Lihat Detail</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        
+                        <!-- Empty State (Hidden by default) -->
+                        <div id="emptyState" class="empty-state-wrapper d-none">
+                            <div class="empty-icon-box">
+                                <i class="fa-regular fa-folder-open"></i>
+                            </div>
+                            <h3>Belum Ada Pelamar</h3>
+                            <p>Data calon kru akan muncul secara otomatis setelah pelamar mengirim formulir pendaftaran.</p>
+                        </div>
+                    </div>
+
+                    <!-- Pagination Footer -->
+                    <div class="pagination-bar" id="paginationBar">
+                        <span class="pagination-info" id="paginationInfo">Menampilkan 1–4 dari 4 pelamar</span>
+                        <div class="pagination-controls" id="paginationControls"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Next Session Button -->
+            <div class="d-flex justify-content-end mt-4 mb-2">
+                <button class="s-btn s-btn-primary s-btn-lg shadow-sm" onclick="handleNextSesi()">
+                    Penilaian Wawancara <i class="fa-solid fa-arrow-right ms-2"></i>
+                </button>
+            </div>
+
+        </div> <!-- End Content Area -->
+    </main>
+</div>
+
+<!-- Custom Admin JS -->
+<script src="../assets/js/admin.js"></script>
+<script>
+    // Skeleton Loading & Empty State Simulation for Data Pelamar
+    document.addEventListener('DOMContentLoaded', () => {
+        const tableBody = document.getElementById('tableBody');
+        const emptyState = document.getElementById('emptyState');
+        // const btnSimulateEmpty = document.getElementById('btnSimulateEmpty');
+        
+        let isEmpty = false;
+        const originalHtml = tableBody.innerHTML; // save dummy data
+
+        // Skeleton row template
+        const skeletonRow = `
+            <tr class="skeleton-row">
+                <td>
+                    <div class="cand-info">
+                        <div class="skeleton skeleton-avatar"></div>
+                        <div>
+                            <div class="skeleton skeleton-text" style="width: 120px;"></div>
+                            <div class="skeleton skeleton-text" style="width: 80px; margin-top: 4px;"></div>
+                        </div>
+                    </div>
+                </td>
+                <td><div class="skeleton skeleton-text" style="width: 50px;"></div></td>
+                <td><div class="skeleton skeleton-text" style="width: 90px;"></div></td>
+                <td><div class="skeleton skeleton-text" style="width: 80px;"></div></td>
+                <td><div class="skeleton skeleton-text" style="width: 70px;"></div></td>
+                <td><div class="skeleton skeleton-text skeleton-badge" style="width: 140px;"></div></td>
+                <td class="text-end"><div class="skeleton skeleton-text" style="width: 80px; float: right;"></div></td>
+            </tr>
+        `;
+        
+        // Fetch and render data
+        function loadData() {
+            // Show skeletons
+            tableBody.innerHTML = skeletonRow.repeat(4);
+            emptyState.classList.add('d-none');
+            
+            const apiBase = (window.location.protocol === 'file:' || window.location.port === '5500' || window.location.port === '5501') ? 'http://localhost:3000' : '';
+            
+            fetch(`${apiBase}/api/applicants`, {
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('adminToken')
+                }
+            })
+            .then(res => res.json())
+            .then(res => {
+                if(res.success && res.data) {
+                    const applicants = res.data;
+                    
+                    if(applicants.length === 0) {
+                        tableBody.innerHTML = '';
+                        emptyState.classList.remove('d-none');
+                        // Reset KPIs
+                        document.getElementById('val-total').innerText = '0';
+                        document.getElementById('val-waiting').innerText = '0';
+                        document.getElementById('val-passed').innerText = '0';
+                        document.getElementById('val-failed').innerText = '0';
+                    } else {
+                        let html = '';
+                        let waitingCount = 0;
+                        let passedCount = 0;
+                        let failedCount = 0;
+
+                        applicants.forEach(app => {
+                            // Calculate Age
+                            const dob = new Date(app.dob);
+                            const ageDifMs = Date.now() - dob.getTime();
+                            const ageDate = new Date(ageDifMs); 
+                            const age = Math.abs(ageDate.getUTCFullYear() - 1970);
+                            
+                            // Format Date
+                            const applyDate = new Date(app.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+                            
+                            // Initials
+                            const initials = app.full_name.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
+                            
+                            // Status Badge
+                            let badgeClass = 's-badge-warning';
+                            let dotClass = 'bg-warning';
+                            let statusText = 'Menunggu Verifikasi Administrasi';
+                            
+                            if(app.status === 'pending') {
+                                waitingCount++;
+                            } else if(app.status === 'evaluated') {
+                                badgeClass = 's-badge-success'; dotClass = 'bg-success';
+                                statusText = 'Lolos Administrasi';
+                                passedCount++;
+                            } else if(app.status === 'rejected') {
+                                badgeClass = 's-badge-danger'; dotClass = 'bg-danger';
+                                statusText = 'Tidak Lolos Administrasi';
+                                failedCount++;
+                            } else if(app.status === 'accepted') {
+                                badgeClass = 's-badge-indigo'; dotClass = 'bg-indigo';
+                                statusText = 'Diterima';
+                            }
+                            
+                            // Parse honor safely
+                            let honorVal = parseInt(String(app.expected_honor).replace(/\D/g, ''), 10);
+                            let honorStr = isNaN(honorVal) ? app.expected_honor : 'Rp ' + honorVal.toLocaleString('id-ID');
+
+                            html += `
+                                <tr>
+                                    <td data-label="Kandidat">
+                                        <div class="cand-info">
+                                            <div class="cand-avatar bg-slate-100 text-slate-700">${initials}</div>
+                                            <div>
+                                                <div class="cand-name font-medium">${app.full_name}</div>
+                                                <div class="cand-email text-xs text-muted">${app.email} <br> ${app.whatsapp}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td data-label="Umur">${age} Tahun</td>
+                                    <td data-label="Pendidikan">${app.education}</td>
+                                    <td data-label="Honor per Event" class="font-medium">${honorStr}</td>
+                                    <td data-label="Tanggal Melamar" class="text-muted">${applyDate}</td>
+                                    <td data-label="Status"><span class="s-badge ${badgeClass}"><span class="status-dot ${dotClass}"></span> ${statusText}</span></td>
+                                    <td class="text-end">
+                                        <button class="s-btn s-btn-outline s-btn-sm" onclick="window.location.href='detail_pelamar.html?id=${app.id}'">Lihat Detail</button>
+                                    </td>
+                                </tr>
+                            `;
+                        });
+                        
+                        tableBody.innerHTML = html;
+                        emptyState.classList.add('d-none');
+                        
+                        // Update KPIs
+                        document.getElementById('val-total').innerText = applicants.length;
+                        document.getElementById('val-waiting').innerText = waitingCount;
+                        document.getElementById('val-passed').innerText = passedCount;
+                        document.getElementById('val-failed').innerText = failedCount;
+                    }
+                    
+                    applyFilters(); // Re-apply existing filtering and pagination
+                } else {
+                    tableBody.innerHTML = `<tr><td colspan="7" class="text-center text-danger py-4">Gagal memuat data: ${res.message || 'Terjadi kesalahan server'}</td></tr>`;
+                    emptyState.classList.add('d-none');
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                tableBody.innerHTML = `<tr><td colspan="7" class="text-center text-danger py-4">Gagal terhubung ke server. Pastikan database MySQL menyala.</td></tr>`;
+                emptyState.classList.add('d-none');
+            });
+        }
+
+        // btnSimulateEmpty.addEventListener('click', () => {
+        //     loadData(); // reload real data
+        // });
+
+        // Initialize real data
+        loadData();
+
+        // ── PAGINATION + FILTER + SORT ────────────────────────────────
+        const filterSearch     = document.getElementById('filterSearch');
+        const filterStatus     = document.getElementById('filterStatus');
+        const filterPendidikan = document.getElementById('filterPendidikan');
+        const filterUmur       = document.getElementById('filterUmur');
+        const filterSort       = document.getElementById('filterSort');
+        const paginationBar      = document.getElementById('paginationBar');
+        const paginationInfo     = document.getElementById('paginationInfo');
+        const paginationControls = document.getElementById('paginationControls');
+
+        const PAGE_SIZE = 5;
+        let currentPage = 1;
+        let filteredRows = [];
+
+        // Status label → filter value mapping
+        const statusMap = {
+            'menunggu': 'menunggu verifikasi administrasi',
+            'lolos':    'lolos administrasi',
+            'gagal':    'tidak lolos administrasi',
+        };
+
+        // Pendidikan filter value → match keyword
+        const pendidikanMap = {
+            'sma': 'sma',
+            'd3':  'd3',
+            's1':  's1',
+        };
+
+        function parseHonor(text) {
+            return parseInt(text.replace(/[^0-9]/g, ''), 10) || 0;
+        }
+
+        function parseUmur(text) {
+            return parseInt(text) || 0;
+        }
+
+        function renderPage(page) {
+            currentPage = page;
+            const total  = filteredRows.length;
+            const start  = (page - 1) * PAGE_SIZE;
+            const end    = Math.min(start + PAGE_SIZE, total);
+            const totalPages = Math.ceil(total / PAGE_SIZE);
+
+            // Show/hide rows
+            filteredRows.forEach((row, i) => {
+                row.style.display = (i >= start && i < end) ? '' : 'none';
+            });
+
+            // Hide rows not in filteredRows (filtered out)
+            Array.from(tableBody.querySelectorAll('tr:not(.skeleton-row)')).forEach(row => {
+                if (!filteredRows.includes(row)) row.style.display = 'none';
+            });
+
+            // Update info text
+            if (total === 0) {
+                paginationInfo.textContent = 'Tidak ada hasil ditemukan';
+            } else {
+                paginationInfo.textContent = `Menampilkan ${start + 1}–${end} dari ${total} pelamar`;
+            }
+
+            // Render page buttons
+            paginationControls.innerHTML = '';
+
+            if (totalPages <= 1) {
+                paginationBar.style.display = total === 0 ? 'none' : 'flex';
+                if (total > 0) paginationControls.innerHTML = '';
+                return;
+            }
+
+            paginationBar.style.display = 'flex';
+
+            // Prev button
+            const prev = document.createElement('button');
+            prev.className = 'btn-page';
+            prev.innerHTML = '<i class="fa-solid fa-chevron-left"></i>';
+            prev.disabled = page === 1;
+            prev.setAttribute('aria-label', 'Halaman sebelumnya');
+            prev.addEventListener('click', () => renderPage(currentPage - 1));
+            paginationControls.appendChild(prev);
+
+            // Page number buttons (show max 5 around current)
+            const delta = 2;
+            let pages = [];
+            for (let p = 1; p <= totalPages; p++) {
+                if (p === 1 || p === totalPages || (p >= page - delta && p <= page + delta)) {
+                    pages.push(p);
+                }
+            }
+
+            let last = 0;
+            pages.forEach(p => {
+                if (last && p - last > 1) {
+                    const dots = document.createElement('span');
+                    dots.className = 'pagination-dots';
+                    dots.textContent = '…';
+                    paginationControls.appendChild(dots);
+                }
+                const btn = document.createElement('button');
+                btn.className = 'btn-page' + (p === page ? ' active' : '');
+                btn.textContent = p;
+                btn.setAttribute('aria-label', `Halaman ${p}`);
+                if (p === page) btn.setAttribute('aria-current', 'page');
+                btn.addEventListener('click', () => renderPage(p));
+                paginationControls.appendChild(btn);
+                last = p;
+            });
+
+            // Next button
+            const next = document.createElement('button');
+            next.className = 'btn-page';
+            next.innerHTML = '<i class="fa-solid fa-chevron-right"></i>';
+            next.disabled = page === totalPages;
+            next.setAttribute('aria-label', 'Halaman berikutnya');
+            next.addEventListener('click', () => renderPage(currentPage + 1));
+            paginationControls.appendChild(next);
+        }
+
+        function applyFilters() {
+            const allRows = Array.from(tableBody.querySelectorAll('tr:not(.skeleton-row)'));
+            if (allRows.length === 0) return;
+
+            const search     = filterSearch.value.trim().toLowerCase();
+            const status     = filterStatus.value;
+            const pendidikan = filterPendidikan.value;
+            const umur       = filterUmur.value;
+            const sort       = filterSort.value;
+
+            filteredRows = allRows.filter(row => {
+                const name    = (row.querySelector('.cand-name')?.textContent  || '').toLowerCase();
+                const contact = (row.querySelector('.cand-email')?.textContent || '').toLowerCase();
+                const edu     = (row.querySelector('td[data-label="Pendidikan"]')?.textContent || '').toLowerCase();
+                const badge   = (row.querySelector('.s-badge')?.textContent     || '').toLowerCase().trim();
+                const ageText = (row.querySelector('td[data-label="Umur"]')?.textContent || '');
+                const age     = parseUmur(ageText);
+
+                const matchSearch    = !search     || name.includes(search) || contact.includes(search);
+                const matchStatus    = !status     || badge === (statusMap[status] || '');
+                const matchPendidikan= !pendidikan || edu.startsWith(pendidikanMap[pendidikan] || '');
+                let   matchUmur      = true;
+                if (umur === '18-22') matchUmur = age >= 18 && age <= 22;
+                if (umur === '23-28') matchUmur = age >= 23 && age <= 28;
+
+                return matchSearch && matchStatus && matchPendidikan && matchUmur;
+            });
+
+            // Sorting
+            if (sort === 'name_asc') {
+                filteredRows.sort((a, b) => {
+                    const na = a.querySelector('.cand-name')?.textContent.trim() || '';
+                    const nb = b.querySelector('.cand-name')?.textContent.trim() || '';
+                    return na.localeCompare(nb, 'id');
+                });
+            } else if (sort === 'honor_asc') {
+                filteredRows.sort((a, b) => {
+                    const ha = parseHonor(a.querySelector('td[data-label="Honor per Event"]')?.textContent || '0');
+                    const hb = parseHonor(b.querySelector('td[data-label="Honor per Event"]')?.textContent || '0');
+                    return ha - hb;
+                });
+            }
+
+            // Re-append in sorted order so DOM order matches
+            filteredRows.forEach(row => tableBody.appendChild(row));
+
+            // Empty state
+            const hasVisible = filteredRows.length > 0;
+            emptyState.classList.toggle('d-none', hasVisible);
+
+            // Reset to page 1 and render
+            renderPage(1);
+        }
+
+        filterSearch.addEventListener('input', applyFilters);
+        filterStatus.addEventListener('change', applyFilters);
+        filterPendidikan.addEventListener('change', applyFilters);
+        filterUmur.addEventListener('change', applyFilters);
+        filterSort.addEventListener('change', applyFilters);
+
+        // Initial render for pagination (no filter active)
+        applyFilters();
+    }); // end DOMContentLoaded
+
+    window.handleNextSesi = function() {
+        const totalCount = parseInt(document.getElementById('val-total').innerText) || 0;
+        if (totalCount > 1) {
+            window.location.href = 'penilaian.html';
+        } else {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Tidak Cukup Data',
+                text: 'Diperlukan lebih dari 1 data pelamar untuk dapat melanjutkan ke sesi Penilaian Wawancara.',
+                confirmButtonColor: '#3b82f6'
+            });
+        }
+    };
+</script>
+</body>
+</html>
+

@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="google" content="notranslate">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="view-transition" content="same-origin">
+    <title>Dashboard - PotraCrew Admin</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="../assets/img/logo.png" type="image/png">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome (Icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Bootstrap Grid (Only Grid & Utilities, UI is Custom) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap-grid.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap-utilities.min.css" rel="stylesheet">
+    
+    <!-- Custom Admin CSS (Shadcn Enterprise Style) -->
+    <link rel="stylesheet" href="../assets/css/admin.css">
+</head>
+<body>
+
+<div class="admin-layout">
+    <!-- Mesh Gradient Background -->
+    <div class="mesh-bg">
+        <div class="bg-shape shape-1"></div>
+        <div class="bg-shape shape-2"></div>
+        <div class="bg-shape shape-3"></div>
+    </div>
+    <!-- Overlay for mobile sidebar -->
+    <div id="sidebarOverlay" class="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 z-3 d-none"></div>
+
+    <!-- 1. Left Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="#" class="sidebar-logo">
+                <img src="../assets/img/logo.png" alt="PotraCrew Logo">
+                Potra<span>Crew</span>
+            </a>
+        </div>
+        
+        <div class="sidebar-content">
+            <div class="sidebar-section-title">Rekrutmen</div>
+            <a href="index.html" class="sidebar-nav-item">
+                <i class="fa-solid fa-house"></i> Dashboard
+            </a>
+            <a href="data_pelamar.html" class="sidebar-nav-item">
+                <i class="fa-solid fa-users"></i> Data Pelamar
+            </a>
+            <a href="penilaian.html" class="sidebar-nav-item">
+                <i class="fa-solid fa-clipboard-user"></i> Penilaian Wawancara
+            </a>
+            
+            <div class="sidebar-section-title">Sistem Penunjang Keputusan (SAW)</div>
+            <a href="master_kriteria.html" class="sidebar-nav-item active">
+                <i class="fa-solid fa-layer-group"></i> Kriteria & Bobot
+            </a>
+            <a href="perhitungan.html" class="sidebar-nav-item">
+                <i class="fa-solid fa-calculator"></i> Perhitungan SAW
+            </a>
+            <a href="keputusan.html" class="sidebar-nav-item">
+                <i class="fa-solid fa-medal"></i> Keputusan Rekrutmen
+            </a>
+            
+        </div>
+        
+        <div class="sidebar-footer">
+<a href="login.html" class="sidebar-nav-item text-danger">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+            </a>
+        </div>
+    </aside>
+
+    <!-- 2. Main Wrapper -->
+    <main class="main-wrapper">
+        <!-- Top Navigation -->
+        <header class="topbar">
+            <div class="d-flex align-items-center gap-3">
+                <button class="icon-btn mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle Mobile Menu">
+                    <i class="fa-solid fa-bars" aria-hidden="true"></i>
+                </button>
+                <div class="breadcrumb-nav d-none d-md-flex">
+                    <span class="text-muted">PotraCrew</span>
+                    <i class="fa-solid fa-chevron-right text-xs opacity-50"></i>
+                    <span class="current">Kriteria & Bobot</span>
+                </div>
+            </div>
+            
+            <div class="topbar-actions">
+<div class="profile-avatar" title="Administrator">A</div>
+            </div>
+        </header>
+
+        <!-- Content Area -->
+        <div class="content-area config-page">
+            
+            <!-- Row 1: Header -->
+            <div class="page-header d-flex flex-column gap-4 mb-4">
+                <div class="flex-grow-1">
+                    <h1 class="page-title">Kriteria & Bobot</h1>
+                    <p class="page-description m-0">Kelola bobot dan jenis kriteria yang digunakan dalam proses perhitungan Sistem Pendukung Keputusan menggunakan metode SAW.</p>
+                </div>
+
+                <!-- Summary Panel Moved to Top Right -->
+                <div class="s-card card-static mb-4" id="summaryPanel">
+                    <div class="s-card-content p-3 d-flex flex-column flex-xl-row align-items-xl-center justify-content-between gap-4 w-100">
+                        <div class="summary-stats d-flex flex-wrap flex-xl-nowrap align-items-center justify-content-start gap-4 gap-xl-5 flex-grow-1 pe-xl-4">
+                            <div class="stat-item d-flex align-items-center gap-2">
+                                <span class="stat-label text-nowrap">Total Bobot</span>
+                                <div class="stat-value text-nowrap" id="summaryTotal">100%</div>
+                            </div>
+                            <div class="stat-divider d-none d-md-block"></div>
+                            <div class="stat-item d-none d-sm-flex align-items-center gap-2">
+                                <span class="stat-label text-nowrap">Jumlah Kriteria</span>
+                                <span class="stat-value-sm text-nowrap">6</span>
+                            </div>
+                            <div class="stat-item d-flex align-items-center gap-2">
+                                <span class="stat-label text-success text-nowrap">Benefit</span>
+                                <span class="stat-value-sm text-nowrap" id="summaryBenefit">5</span>
+
+                            </div>
+                            <div class="stat-item d-flex align-items-center gap-2">
+                                <span class="stat-label text-danger text-nowrap">Cost</span>
+                                <span class="stat-value-sm text-nowrap" id="summaryCost">1</span>
+                            </div>
+                            <div class="stat-divider d-none d-md-block"></div>
+                            <div class="stat-item d-flex align-items-center gap-2">
+                                <span class="stat-label text-nowrap">Status Konfigurasi</span>
+                                <span class="s-badge s-badge-success text-nowrap mt-1" id="summaryStatusBadge"><i class="fa-solid fa-check me-1"></i> Valid</span>
+                            </div>
+                        </div>
+                        <div class="summary-actions d-flex gap-2 w-100 w-xl-auto border-start ps-xl-4 align-items-center">
+                            <button class="s-btn s-btn-outline text-nowrap" id="btnReset" onclick="resetConfig()">Reset</button>
+                            <button class="s-btn s-btn-primary text-nowrap" id="btnSave" onclick="saveConfig()">Simpan Perubahan</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Configuration Form -->
+            <div class="row g-4 mb-5" id="criteriaContainer">
+                <!-- Generated by JS -->
+            </div>
+            
+            <div class="d-flex justify-content-end mb-4">
+                <a href="perhitungan.html" class="s-btn s-btn-primary s-btn-lg shadow-sm">
+                    Lanjutkan Perhitungan SAW <i class="fa-solid fa-arrow-right ms-2"></i>
+                </a>
+            </div>
+
+        </div> <!-- End Content Area -->
+
+    </main>
+</div>
+
+<!-- Custom Admin JS -->
+<script src="../assets/js/admin.js"></script>
+<!-- Master Kriteria JS -->
+<script src="../assets/js/kriteria.js"></script>
+
+</body>
+</html>

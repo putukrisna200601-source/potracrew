@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="google" content="notranslate">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="view-transition" content="same-origin">
+    <title>Perhitungan SAW - PotraCrew Admin</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="../assets/img/logo.png" type="image/png">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome (Icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Bootstrap Grid (Only Grid & Utilities, UI is Custom) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap-grid.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap-utilities.min.css" rel="stylesheet">
+    
+    <!-- Custom Admin CSS (Shadcn Enterprise Style) -->
+    <link rel="stylesheet" href="../assets/css/admin.css">
+</head>
+<body>
+
+<div class="admin-layout">
+    <!-- Mesh Gradient Background -->
+    <div class="mesh-bg">
+        <div class="bg-shape shape-1"></div>
+        <div class="bg-shape shape-2"></div>
+        <div class="bg-shape shape-3"></div>
+    </div>
+    <!-- Overlay for mobile sidebar -->
+    <div id="sidebarOverlay" class="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 z-3 d-none"></div>
+
+    <!-- 1. Left Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="#" class="sidebar-logo">
+                <img src="../assets/img/logo.png" alt="PotraCrew Logo">
+                Potra<span>Crew</span>
+            </a>
+        </div>
+        
+        <div class="sidebar-content">
+            <div class="sidebar-section-title">Rekrutmen</div>
+            <a href="index.html" class="sidebar-nav-item">
+                <i class="fa-solid fa-house"></i> Dashboard
+            </a>
+            <a href="data_pelamar.html" class="sidebar-nav-item">
+                <i class="fa-solid fa-users"></i> Data Pelamar
+            </a>
+            <a href="penilaian.html" class="sidebar-nav-item">
+                <i class="fa-solid fa-clipboard-user"></i> Penilaian Wawancara
+            </a>
+            <a href="arsip.html" class="sidebar-nav-item">
+                <i class="fa-solid fa-box-archive"></i> Arsip Pelamar
+            </a>
+            
+            <div class="sidebar-section-title mt-4">Keputusan (SPK)</div>
+            <a href="master_kriteria.html" class="sidebar-nav-item">
+                <i class="fa-solid fa-layer-group"></i> Kriteria & Bobot
+            </a>
+            <a href="perhitungan.html" class="sidebar-nav-item active">
+                <i class="fa-solid fa-calculator"></i> Perhitungan SAW
+            </a>
+            <a href="keputusan.html" class="sidebar-nav-item">
+                <i class="fa-solid fa-medal"></i> Keputusan Rekrutmen
+            </a>
+            
+        </div>
+        
+        <div class="sidebar-footer">
+<a href="login.html" class="sidebar-nav-item text-danger">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+            </a>
+        </div>
+    </aside>
+
+    <!-- 2. Main Wrapper -->
+    <main class="main-wrapper">
+        <!-- Top Navigation -->
+        <header class="topbar">
+            <div class="d-flex align-items-center gap-3">
+                <button class="icon-btn mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle Mobile Menu">
+                    <i class="fa-solid fa-bars" aria-hidden="true"></i>
+                </button>
+                <div class="breadcrumb-nav d-none d-md-flex">
+                    <span class="text-muted">PotraCrew</span>
+                    <i class="fa-solid fa-chevron-right text-xs opacity-50"></i>
+                    <span class="current">Perhitungan SAW</span>
+                </div>
+            </div>
+            
+            <div class="topbar-actions">
+                <!-- Search removed for SAW section -->
+<div class="profile-avatar" title="Administrator">A</div>
+            </div>
+        </header>
+
+
+
+        <!-- Content Area -->
+        <div class="content-area config-page">
+            
+            <div class="page-header d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-4 mb-4">
+                <div class="flex-grow-1">
+                    <h1 class="page-title">Perhitungan Metode SAW</h1>
+                    <p class="page-description m-0">Eksekusi perhitungan Simple Additive Weighting secara bertahap untuk menghasilkan rekomendasi pelamar terbaik.</p>
+                </div>
+            </div>
+
+            <!-- Empty State / Main Attention Area -->
+            <div id="initialState" class="d-flex flex-column justify-content-center align-items-center text-center saw-start-container">
+                <div class="mb-4">
+                    <div class="d-inline-flex align-items-center justify-content-center rounded-circle bg-primary bg-opacity-10 text-primary mb-3 saw-start-icon-box">
+                        <i class="fa-solid fa-microchip"></i>
+                    </div>
+                    <h2 class="font-bold mb-2">Siap Mengeksekusi Algoritma?</h2>
+                    <p class="text-muted mx-auto saw-start-desc">Sistem akan memproses seluruh data penilaian pelamar menggunakan metode matematis SAW untuk mengurutkan kandidat dari yang paling direkomendasikan.</p>
+                </div>
+                <button class="s-btn s-btn-primary s-btn-lg shadow-lg px-5 py-3 saw-start-btn" id="btnStartSAW" onclick="startCalculation()">
+                    <i class="fa-solid fa-calculator me-2"></i> Mulai Perhitungan SAW
+                </button>
+            </div>
+
+            <!-- ANIMATION OVERLAY -->
+            <div id="loadingOverlay" class="saw-loading-overlay d-none">
+                <div class="saw-loading-card">
+                    <div class="saw-spinner">
+                        <div class="cube-wrapper">
+                            <div class="cube">
+                                <div class="side front"></div>
+                                <div class="side back"></div>
+                                <div class="side right"></div>
+                                <div class="side left"></div>
+                                <div class="side top"></div>
+                                <div class="side bottom"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <h3 class="mb-4 text-center">Memproses Algoritma SAW...</h3>
+                    <ul class="saw-steps-list">
+                        <li id="step1"><i class="fa-regular fa-circle"></i> Membaca Data Interview</li>
+                        <li id="step2"><i class="fa-regular fa-circle"></i> Membentuk Matriks Keputusan</li>
+                        <li id="step3"><i class="fa-regular fa-circle"></i> Melakukan Normalisasi</li>
+                        <li id="step4"><i class="fa-regular fa-circle"></i> Mengalikan Bobot</li>
+                        <li id="step5"><i class="fa-regular fa-circle"></i> Menghitung Nilai Preferensi</li>
+                        <li id="step6"><i class="fa-regular fa-circle"></i> Menyusun Ranking</li>
+                        <li id="step7" class="final-step"><i class="fa-regular fa-circle"></i> Perhitungan Selesai</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- RESULTS CONTAINER (Hidden until processed) -->
+            <div id="resultsContainer" class="d-none">
+                
+                <!-- 1. Ringkasan -->
+                <div class="s-card card-static mb-4 saw-section">
+                    <div class="s-card-content p-4">
+                        <h2 class="s-card-title mb-4"><i class="fa-solid fa-chart-pie text-primary me-2"></i> 1. Ringkasan Data</h2>
+                        <div class="row g-4">
+                            <div class="col-6 col-md-3">
+                                <div class="text-xs text-muted text-uppercase letter-spacing-1 mb-1">Total Pelamar</div>
+                                <div class="font-bold text-xl" id="resTotalPelamar">-</div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="text-xs text-muted text-uppercase letter-spacing-1 mb-1">Total Kriteria</div>
+                                <div class="font-bold text-xl" id="resTotalKriteria">-</div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="text-xs text-muted text-uppercase letter-spacing-1 mb-1">Benefit / Cost</div>
+                                <div class="font-bold text-xl"><span class="text-success" id="resBenefit">-</span> / <span class="text-danger" id="resCost">-</span></div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="text-xs text-muted text-uppercase letter-spacing-1 mb-1">Tanggal Eksekusi</div>
+                                <div class="font-bold text-base mt-1" id="resTanggal">-</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. Matriks Keputusan -->
+                <div class="s-card card-static mb-4 saw-section delay-100">
+                    <div class="s-card-content p-4">
+                        <h2 class="s-card-title mb-2"><i class="fa-solid fa-table text-primary me-2"></i> 2. Matriks Keputusan (X)</h2>
+                        <p class="text-muted text-sm mb-4">Matriks ini berisi nilai mentah dari hasil penilaian interview setiap pelamar terhadap masing-masing kriteria.</p>
+                        <div class="s-table-wrapper border rounded">
+                            <table class="s-table" id="tableMatriks">
+                                <thead>
+                                    <tr id="theadMatriks"></tr>
+                                </thead>
+                                <tbody id="tbodyMatriks"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 3. Normalisasi -->
+                <div class="s-card card-static mb-4 saw-section delay-200">
+                    <div class="s-card-content p-4">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <h2 class="s-card-title m-0"><i class="fa-solid fa-square-root-variable text-primary me-2"></i> 3. Normalisasi Matriks (R)</h2>
+                            <button class="s-btn s-btn-outline s-btn-sm" onclick="showRumusModal('normalisasi')">
+                                <i class="fa-solid fa-circle-info me-1"></i> Lihat Rumus
+                            </button>
+                        </div>
+                        <p class="text-muted text-sm mb-4">Menyesuaikan skala nilai berdasarkan jenis kriteria (Benefit = dibagi nilai max, Cost = nilai min dibagi data).</p>
+                        <div class="s-table-wrapper border rounded">
+                            <table class="s-table" id="tableNormalisasi">
+                                <thead>
+                                    <tr id="theadNormalisasi"></tr>
+                                </thead>
+                                <tbody id="tbodyNormalisasi"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4. Perkalian Bobot -->
+                <div class="s-card card-static mb-4 saw-section delay-300">
+                    <div class="s-card-content p-4">
+                        <h2 class="s-card-title mb-2"><i class="fa-solid fa-xmark text-primary me-2"></i> 4. Perkalian dengan Bobot (Y)</h2>
+                        <p class="text-muted text-sm mb-4">Nilai normalisasi (R) dikalikan dengan bobot (W) tiap kriteria yang telah ditentukan.</p>
+                        <div class="s-table-wrapper border rounded">
+                            <table class="s-table" id="tableBobot">
+                                <thead>
+                                    <tr id="theadBobot"></tr>
+                                </thead>
+                                <tbody id="tbodyBobot"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 5 & 6. Preferensi & Ranking -->
+                <div class="row g-4 mb-4 saw-section delay-400">
+                    <div class="col-12 col-xl-8">
+                        <div class="s-card card-static h-100">
+                            <div class="s-card-content p-4">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <h2 class="s-card-title m-0"><i class="fa-solid fa-trophy text-warning me-2"></i> 5. Nilai Akhir & Peringkat</h2>
+                                    <button class="s-btn s-btn-outline s-btn-sm" onclick="showRumusModal('preferensi')">
+                                        <i class="fa-solid fa-circle-info me-1"></i> Rumus (Vi)
+                                    </button>
+                                </div>
+                                <p class="text-muted text-sm mb-4">Total penjumlahan (V) dari seluruh nilai perkalian bobot per kandidat.</p>
+                                
+                                <div class="s-table-wrapper border rounded">
+                                    <table class="s-table" id="tableRanking">
+                                        <thead>
+                                            <tr>
+                                                <th width="80">Peringkat</th>
+                                                <th>Nama Kandidat</th>
+                                                <th class="text-end">Nilai Akhir (Vi)</th>
+                                                <th width="120" class="text-center">Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="tbodyRanking"></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 7. Kesimpulan -->
+                    <div class="col-12 col-xl-4">
+                        <div class="s-card card-static h-100 bg-primary-subtle border-primary-subtle">
+                            <div class="s-card-content p-4 d-flex flex-column">
+                                <h2 class="s-card-title mb-4"><i class="fa-solid fa-lightbulb text-primary me-2"></i> Kesimpulan</h2>
+                                
+                                <div class="text-center mb-4 mt-2">
+                                    <div class="text-xs text-muted text-uppercase letter-spacing-1 mb-2">Rekomendasi Utama</div>
+                                    <div class="winner-avatar mx-auto mb-3" id="winnerAvatar">?</div>
+                                    <h3 class="font-bold text-xl mb-1" id="winnerName">-</h3>
+                                    <div class="text-primary font-bold text-2xl" id="winnerScore">0.000</div>
+                                </div>
+                                
+                                <div class="text-center px-2 mb-4">
+                                    <p class="text-sm text-muted m-0" id="winnerReason">Belum ada data untuk dianalisis.</p>
+                                </div>
+                                
+                                <div class="mt-auto pt-3 border-top border-primary-subtle">
+                                    <div class="d-flex gap-2 text-sm text-muted">
+                                        <i class="fa-solid fa-circle-info mt-1 opacity-75"></i>
+                                        <p class="m-0 line-height-tight">Hasil ini merupakan <b>saran matematis</b> (Decision Support). Keputusan akhir perekrutan tetap berada di tangan Owner.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-end mt-4 mb-2">
+                    <a href="keputusan.html" class="s-btn s-btn-primary s-btn-lg shadow-sm">
+                        Keputusan Rekrutmen <i class="fa-solid fa-arrow-right ms-2"></i>
+                    </a>
+                </div>
+
+            </div> <!-- End Results Container -->
+
+        </div> <!-- End Content Area -->
+
+        <!-- Modal Rumus XAI -->
+        <div class="dialog-overlay" id="modalRumus">
+            <div class="dialog-box max-w-600">
+                <div class="dialog-header">
+                    <h2 class="dialog-title" id="rumusTitle">Detail Perhitungan</h2>
+                    <button class="icon-btn dialog-close" onclick="closeModal('modalRumus')" aria-label="Tutup" title="Tutup">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <div class="dialog-content" id="rumusBody">
+                    <!-- Injected via JS -->
+                </div>
+                <div class="dialog-footer">
+                    <button class="s-btn s-btn-primary w-100" onclick="closeModal('modalRumus')">Mengerti</button>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Modal Rumus XAI -->
+        <div class="dialog-overlay" id="modalRumus">
+            <div class="dialog-box dialog-box-md">
+                <div class="dialog-header">
+                    <h2 class="dialog-title" id="rumusTitle">Detail Perhitungan</h2>
+                    <button class="icon-btn dialog-close" onclick="closeModal('modalRumus')" aria-label="Tutup Dialog">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <div class="dialog-content" id="rumusBody">
+                    <!-- Injected via JS -->
+                </div>
+                <div class="dialog-footer">
+                    <button class="s-btn s-btn-primary w-100" onclick="closeModal('modalRumus')">Mengerti</button>
+                </div>
+            </div>
+        </div>
+
+
+
+    </main>
+</div>
+
+<!-- Custom Admin JS -->
+<script src="../assets/js/admin.js"></script>
+<!-- Perhitungan SAW JS -->
+<script src="../assets/js/perhitungan.js"></script>
+
+</body>
+</html>
+

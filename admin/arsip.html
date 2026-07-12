@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="google" content="notranslate">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="view-transition" content="same-origin">
+    <title>Arsip Pelamar - PotraCrew Admin</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="../assets/img/logo.png" type="image/png">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome (Icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Bootstrap Grid (Only Grid & Utilities, UI is Custom) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap-grid.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap-utilities.min.css" rel="stylesheet">
+    
+    <!-- Custom Admin CSS (Shadcn Enterprise Style) -->
+    <link rel="stylesheet" href="../assets/css/admin.css">
+</head>
+<body>
+
+<div class="admin-layout">
+    <!-- Mesh Gradient Background -->
+    <div class="mesh-bg">
+        <div class="bg-shape shape-1"></div>
+        <div class="bg-shape shape-2"></div>
+        <div class="bg-shape shape-3"></div>
+    </div>
+    <!-- Overlay for mobile sidebar -->
+    <div id="sidebarOverlay" class="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 z-3 d-none"></div>
+
+    <!-- 1. Left Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="#" class="sidebar-logo">
+                <img src="../assets/img/logo.png" alt="PotraCrew Logo">
+                Potra<span>Crew</span>
+            </a>
+        </div>
+        
+        <div class="sidebar-content">
+            <div class="sidebar-section-title">Rekrutmen</div>
+            <a href="index.html" class="sidebar-nav-item">
+                <i class="fa-solid fa-house"></i> Dashboard
+            </a>
+            <a href="data_pelamar.html" class="sidebar-nav-item">
+                <i class="fa-solid fa-users"></i> Data Pelamar
+            </a>
+            <a href="penilaian.html" class="sidebar-nav-item">
+                <i class="fa-solid fa-clipboard-user"></i> Penilaian Wawancara
+            </a>
+            <a href="arsip.html" class="sidebar-nav-item active">
+                <i class="fa-solid fa-box-archive"></i> Arsip Pelamar
+            </a>
+            
+            <div class="sidebar-section-title mt-4">Keputusan (SPK)</div>
+            <a href="master_kriteria.html" class="sidebar-nav-item">
+                <i class="fa-solid fa-layer-group"></i> Kriteria & Bobot
+            </a>
+            <a href="perhitungan.html" class="sidebar-nav-item">
+                <i class="fa-solid fa-calculator"></i> Perhitungan SAW
+            </a>
+            <a href="keputusan.html" class="sidebar-nav-item">
+                <i class="fa-solid fa-medal"></i> Keputusan Rekrutmen
+            </a>
+            
+        </div>
+        
+        <div class="sidebar-footer">
+<a href="login.html" class="sidebar-nav-item text-danger">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+            </a>
+        </div>
+    </aside>
+
+    <!-- 2. Main Wrapper -->
+    <main class="main-wrapper">
+        <!-- Top Navigation -->
+        <header class="topbar">
+            <div class="d-flex align-items-center gap-3">
+                <button class="icon-btn mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle Mobile Menu">
+                    <i class="fa-solid fa-bars" aria-hidden="true"></i>
+                </button>
+                <div class="breadcrumb-nav d-none d-md-flex">
+                    <span class="text-muted">PotraCrew</span>
+                    <i class="fa-solid fa-chevron-right text-xs opacity-50"></i>
+                    <span class="current">Arsip Pelamar</span>
+                </div>
+            </div>
+            
+            <div class="topbar-actions">
+                <div class="search-box d-none d-lg-block">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" placeholder="Cari pelamar atau laporan...">
+                </div>
+                
+<div class="profile-avatar" title="Administrator">A</div>
+            </div>
+        </header>
+
+        <!-- Content Area -->
+        <div class="content-area">
+            
+            <!-- Row 1: Header -->
+            <div class="page-header d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-3">
+                <div>
+                    <h1 class="page-title">Arsip Pelamar</h1>
+                    <p class="page-description">Riwayat pelamar yang sudah mencapai keputusan akhir (Diterima / Ditolak).</p>
+                </div>
+                <!-- Action Button Optional (e.g. Refresh Data) -->
+                <div>
+                    <button class="s-btn s-btn-outline text-danger" id="btnCleanupArchives" onclick="cleanupArchives()"><i class="fa-solid fa-trash-can"></i> Bersihkan Semua Arsip</button>
+                </div>
+            </div>
+
+            <!-- Row 3: Toolbar (Search & Filters) -->
+            <div class="s-card card-static mb-4" id="toolbarContainer">
+                <div class="s-card-content p-3 d-flex flex-column flex-xl-row gap-3">
+                    <!-- Search -->
+                    <div class="flex-grow-1">
+                        <div class="search-box m-0 w-100">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <input type="text" id="filterSearch" placeholder="Cari berdasarkan nama, email, atau no HP...">
+                        </div>
+                    </div>
+                    
+                    <!-- Filters -->
+                    <div class="d-flex flex-wrap gap-2">
+                        
+                        
+                        <select class="s-select" id="filterPendidikan" title="Filter Pendidikan" aria-label="Filter Pendidikan">
+                            <option value="">Pendidikan</option>
+                            <option value="sma">SMA/SMK</option>
+                            <option value="d3">D3</option>
+                            <option value="s1">S1</option>
+                        </select>
+                        
+                        <select class="s-select" id="filterUmur" title="Filter Rentang Umur" aria-label="Filter Rentang Umur">
+                            <option value="">Rentang Umur</option>
+                            <option value="18-22">18-22 Tahun</option>
+                            <option value="23-28">23-28 Tahun</option>
+                        </select>
+
+                        <select class="s-select bg-muted font-medium" id="filterSort" title="Urutkan Data" aria-label="Urutkan Data">
+                            <option value="date_desc">Urutkan: Tanggal Daftar</option>
+                            <option value="name_asc">Urutkan: Nama (A-Z)</option>
+                            <option value="honor_asc">Urutkan: Honor</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Row 4: Enterprise Data Table -->
+            <div class="s-card card-static">
+                <div class="s-card-content p-0 relative">
+                    <div class="s-table-wrapper" id="pelamarTableContainer">
+                        <table class="s-table ats-table" id="pelamarTable">
+                            <thead>
+                                <tr>
+                                    <th>Nama Kandidat</th>
+                                    
+                                    <th>Keputusan Akhir</th>
+                                    <th>Sisa Waktu (Auto Delete)</th>
+                                    <th>Tanggal Melamar</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody">
+                                <!-- Data will be loaded via JS -->
+                            </tbody>
+                        </table>
+                        
+                        <!-- Empty State (Hidden by default) -->
+                        <div id="emptyState" class="empty-state-wrapper d-none">
+                            <div class="empty-icon-box">
+                                <i class="fa-regular fa-folder-open"></i>
+                            </div>
+                            <h3>Belum Ada Pelamar</h3>
+                            <p>Data calon kru akan muncul secara otomatis setelah pelamar mengirim formulir pendaftaran.</p>
+                        </div>
+                    </div>
+
+                    <!-- Pagination Footer -->
+                    <div class="pagination-bar" id="paginationBar">
+                        <span class="pagination-info" id="paginationInfo">Menampilkan 1–4 dari 4 pelamar</span>
+                        <div class="pagination-controls" id="paginationControls"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div> <!-- End Content Area -->
+    </main>
+</div>
+
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- Custom Admin JS -->
+<script src="../assets/js/admin.js"></script>
+<script>
+    // Skeleton Loading & Empty State Simulation for Data Pelamar
+    document.addEventListener('DOMContentLoaded', () => {
+        const tableBody = document.getElementById('tableBody');
+        const emptyState = document.getElementById('emptyState');
+        
+        let isEmpty = false;
+        const originalHtml = tableBody.innerHTML; // save dummy data
+
+        // Skeleton row template
+        const skeletonRow = `
+            <tr class="skeleton-row">
+                <td>
+                    <div class="cand-info">
+                        <div class="skeleton skeleton-avatar"></div>
+                        <div>
+                            <div class="skeleton skeleton-text" style="width: 120px;"></div>
+                            <div class="skeleton skeleton-text" style="width: 80px; margin-top: 4px;"></div>
+                        </div>
+                    </div>
+                </td>
+                <td><div class="skeleton skeleton-text" style="width: 50px;"></div></td>
+                <td><div class="skeleton skeleton-text" style="width: 90px;"></div></td>
+                <td><div class="skeleton skeleton-text" style="width: 80px;"></div></td>
+                <td><div class="skeleton skeleton-text" style="width: 70px;"></div></td>
+            </tr>
+        `;
+        
+        // Fetch and render data
+        function loadData() {
+            // Show skeletons
+            tableBody.innerHTML = skeletonRow.repeat(4);
+            emptyState.classList.add('d-none');
+            
+            const apiBase = (window.location.protocol === 'file:' || window.location.port === '5500' || window.location.port === '5501') ? 'http://localhost:3000' : '';
+            
+            fetch(`${apiBase}/api/applicants/archive`, {
+                headers: {
+                    'Authorization': 'Bearer ' + localStorage.getItem('adminToken')
+                }
+            })
+            .then(res => res.json())
+            .then(res => {
+                if(res.success && res.data) {
+                    const applicants = res.data;
+                    
+                    if(applicants.length === 0) {
+                        tableBody.innerHTML = '';
+                        emptyState.classList.remove('d-none');
+
+                    } else {
+                        let html = '';
+                        applicants.forEach(app => {
+                            const applyDate = new Date(app.created_at).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+                            const initials = app.full_name.split(' ').map(n => n[0]).join('').substring(0,2).toUpperCase();
+                            
+                            let badgeClass = app.status === 'accepted' ? 's-badge-indigo' : 's-badge-danger';
+                            let dotClass = app.status === 'accepted' ? 'bg-indigo' : 'bg-danger';
+                            let statusText = app.status === 'accepted' ? 'Diterima' : 'Ditolak';
+                            
+                            let sisaWaktu = 'Expired';
+                            let sisaWaktuClass = 'text-danger';
+                            if (app.decision_date) {
+                                const decisionDate = new Date(app.decision_date);
+                                const expiryDate = new Date(decisionDate.getTime() + (14 * 24 * 60 * 60 * 1000));
+                                const now = new Date();
+                                const diffDays = Math.ceil((expiryDate - now) / (1000 * 60 * 60 * 24));
+                                
+                                if (diffDays > 0) {
+                                    sisaWaktu = diffDays + ' Hari';
+                                    sisaWaktuClass = diffDays < 3 ? 'text-warning' : 'text-muted';
+                                }
+                            }
+
+                            let age = 0;
+                            if (app.birth_date) {
+                                const birthDate = new Date(app.birth_date);
+                                const ageDifMs = Date.now() - birthDate.getTime();
+                                const ageDate = new Date(ageDifMs);
+                                age = Math.abs(ageDate.getUTCFullYear() - 1970);
+                            }
+
+                            html += `
+                                <tr data-edu="${app.education || ''}" data-age="${age}">
+                                    <td data-label="Kandidat">
+                                        <div class="cand-info">
+                                            <div class="cand-avatar bg-slate-100 text-slate-700">${initials}</div>
+                                            <div>
+                                                <div class="cand-name font-medium">${app.full_name}</div>
+                                                <div class="cand-email text-xs text-muted">${app.email} <br> ${app.whatsapp}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    
+                                    <td data-label="Keputusan Akhir"><span class="s-badge ${badgeClass}"><span class="status-dot ${dotClass}"></span> ${statusText}</span></td>
+                                    <td data-label="Sisa Waktu" class="font-medium ${sisaWaktuClass}">${sisaWaktu}</td>
+                                    <td data-label="Tanggal Melamar" class="text-muted">${applyDate}</td>
+                                </tr>
+                            `;
+                        });
+                        
+                        tableBody.innerHTML = html;
+                        emptyState.classList.add('d-none');
+                        
+                        applyFilters(); // Re-apply existing filtering and pagination
+                    }
+                } else {
+                    tableBody.innerHTML = `<tr><td colspan="4" class="text-center text-danger py-4">Gagal memuat data: ${res.message || 'Terjadi kesalahan server'}</td></tr>`;
+                    emptyState.classList.add('d-none');
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                tableBody.innerHTML = `<tr><td colspan="4" class="text-center text-danger py-4">Gagal terhubung ke server. Pastikan database MySQL menyala.</td></tr>`;
+                emptyState.classList.add('d-none');
+            });
+        }
+
+        // Initialize real data
+        loadData();
+
+        // ── PAGINATION + FILTER + SORT ────────────────────────────────
+        const filterSearch     = document.getElementById('filterSearch');
+        const filterStatus     = document.getElementById('filterStatus');
+        const filterPendidikan = document.getElementById('filterPendidikan');
+        const filterUmur       = document.getElementById('filterUmur');
+        const filterSort       = document.getElementById('filterSort');
+        const paginationBar      = document.getElementById('paginationBar');
+        const paginationInfo     = document.getElementById('paginationInfo');
+        const paginationControls = document.getElementById('paginationControls');
+
+        const PAGE_SIZE = 5;
+        let currentPage = 1;
+        let filteredRows = [];
+
+        // Status label → filter value mapping
+        const statusMap = {
+            'menunggu': 'menunggu verifikasi administrasi',
+            'lolos':    'lolos administrasi',
+            'gagal':    'tidak lolos administrasi',
+        };
+
+        // Pendidikan filter value → match keyword
+        const pendidikanMap = {
+            'sma': 'sma',
+            'd3':  'd3',
+            's1':  's1',
+        };
+
+        function parseHonor(text) {
+            return parseInt(text.replace(/[^0-9]/g, ''), 10) || 0;
+        }
+
+        function parseUmur(text) {
+            return parseInt(text) || 0;
+        }
+
+        function renderPage(page) {
+            currentPage = page;
+            const total  = filteredRows.length;
+            const start  = (page - 1) * PAGE_SIZE;
+            const end    = Math.min(start + PAGE_SIZE, total);
+            const totalPages = Math.ceil(total / PAGE_SIZE);
+
+            // Show/hide rows
+            filteredRows.forEach((row, i) => {
+                row.style.display = (i >= start && i < end) ? '' : 'none';
+            });
+
+            // Hide rows not in filteredRows (filtered out)
+            Array.from(tableBody.querySelectorAll('tr:not(.skeleton-row)')).forEach(row => {
+                if (!filteredRows.includes(row)) row.style.display = 'none';
+            });
+
+            // Update info text
+            if (total === 0) {
+                paginationInfo.textContent = 'Tidak ada hasil ditemukan';
+            } else {
+                paginationInfo.textContent = `Menampilkan ${start + 1}–${end} dari ${total} pelamar`;
+            }
+
+            // Render page buttons
+            paginationControls.innerHTML = '';
+
+            if (totalPages <= 1) {
+                paginationBar.style.display = total === 0 ? 'none' : 'flex';
+                if (total > 0) paginationControls.innerHTML = '';
+                return;
+            }
+
+            paginationBar.style.display = 'flex';
+
+            // Prev button
+            const prev = document.createElement('button');
+            prev.className = 'btn-page';
+            prev.innerHTML = '<i class="fa-solid fa-chevron-left"></i>';
+            prev.disabled = page === 1;
+            prev.setAttribute('aria-label', 'Halaman sebelumnya');
+            prev.addEventListener('click', () => renderPage(currentPage - 1));
+            paginationControls.appendChild(prev);
+
+            // Page number buttons (show max 5 around current)
+            const delta = 2;
+            let pages = [];
+            for (let p = 1; p <= totalPages; p++) {
+                if (p === 1 || p === totalPages || (p >= page - delta && p <= page + delta)) {
+                    pages.push(p);
+                }
+            }
+
+            let last = 0;
+            pages.forEach(p => {
+                if (last && p - last > 1) {
+                    const dots = document.createElement('span');
+                    dots.className = 'pagination-dots';
+                    dots.textContent = '…';
+                    paginationControls.appendChild(dots);
+                }
+                const btn = document.createElement('button');
+                btn.className = 'btn-page' + (p === page ? ' active' : '');
+                btn.textContent = p;
+                btn.setAttribute('aria-label', `Halaman ${p}`);
+                if (p === page) btn.setAttribute('aria-current', 'page');
+                btn.addEventListener('click', () => renderPage(p));
+                paginationControls.appendChild(btn);
+                last = p;
+            });
+
+            // Next button
+            const next = document.createElement('button');
+            next.className = 'btn-page';
+            next.innerHTML = '<i class="fa-solid fa-chevron-right"></i>';
+            next.disabled = page === totalPages;
+            next.setAttribute('aria-label', 'Halaman berikutnya');
+            next.addEventListener('click', () => renderPage(currentPage + 1));
+            paginationControls.appendChild(next);
+        }
+
+        function applyFilters() {
+            const allRows = Array.from(tableBody.querySelectorAll('tr:not(.skeleton-row)'));
+            if (allRows.length === 0) return;
+
+            const search     = filterSearch ? filterSearch.value.trim().toLowerCase() : '';
+            const status     = filterStatus ? filterStatus.value : '';
+            const pendidikan = filterPendidikan ? filterPendidikan.value : '';
+            const umur       = filterUmur ? filterUmur.value : '';
+            const sort       = filterSort ? filterSort.value : '';
+
+            filteredRows = allRows.filter(row => {
+                const name    = (row.querySelector('.cand-name')?.textContent  || '').toLowerCase();
+                const contact = (row.querySelector('.cand-email')?.textContent || '').toLowerCase();
+                const edu     = (row.getAttribute('data-edu') || '').toLowerCase();
+                const badge   = (row.querySelector('.s-badge')?.textContent     || '').toLowerCase().trim();
+                const ageText = (row.getAttribute('data-age') || '0');
+                const age     = parseInt(ageText, 10);
+
+                const matchSearch    = !search     || name.includes(search) || contact.includes(search);
+                const matchStatus    = !status     || badge === (statusMap[status] || '');
+                const matchPendidikan= !pendidikan || edu.includes(pendidikanMap[pendidikan] || '$$$') || (pendidikan === 'sma' && (edu.includes('sma') || edu.includes('smk')));
+                let   matchUmur      = true;
+                if (umur === '18-22') matchUmur = age >= 18 && age <= 22;
+                if (umur === '23-28') matchUmur = age >= 23 && age <= 28;
+
+                return matchSearch && matchStatus && matchPendidikan && matchUmur;
+            });
+
+            // Sorting
+            if (sort === 'name_asc') {
+                filteredRows.sort((a, b) => {
+                    const na = a.querySelector('.cand-name')?.textContent.trim() || '';
+                    const nb = b.querySelector('.cand-name')?.textContent.trim() || '';
+                    return na.localeCompare(nb, 'id');
+                });
+            } else if (sort === 'honor_asc') {
+                filteredRows.sort((a, b) => {
+                    const ha = parseHonor(a.querySelector('td[data-label="Honor per Event"]')?.textContent || '0');
+                    const hb = parseHonor(b.querySelector('td[data-label="Honor per Event"]')?.textContent || '0');
+                    return ha - hb;
+                });
+            }
+
+            // Re-append in sorted order so DOM order matches
+            filteredRows.forEach(row => tableBody.appendChild(row));
+
+            // Empty state
+            const hasVisible = filteredRows.length > 0;
+            emptyState.classList.toggle('d-none', hasVisible);
+
+            // Reset to page 1 and render
+            renderPage(1);
+        }
+
+        if (filterSearch) filterSearch.addEventListener('input', applyFilters);
+        if (filterStatus) filterStatus.addEventListener('change', applyFilters);
+        if (filterPendidikan) filterPendidikan.addEventListener('change', applyFilters);
+        if (filterUmur) filterUmur.addEventListener('change', applyFilters);
+        if (filterSort) filterSort.addEventListener('change', applyFilters);
+
+        // Initial render for pagination (no filter active)
+        applyFilters();
+    });
+
+    window.cleanupArchives = async function() {
+        const result = await Swal.fire({
+            title: 'Bersihkan Arsip?',
+            text: 'Apakah Anda yakin ingin menghapus SEMUA data pelamar di arsip? Aksi ini akan menghapus data pelamar secara permanen beserta semua file berkasnya.',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ef4444',
+            cancelButtonColor: '#64748b',
+            confirmButtonText: 'Ya, hapus semua!',
+            cancelButtonText: 'Batal'
+        });
+
+        if (!result.isConfirmed) return;
+
+        const apiBase = (window.location.protocol === 'file:' || window.location.port === '5500' || window.location.port === '5501') ? 'http://localhost:3000' : '';
+        try {
+            const btn = document.getElementById('btnCleanupArchives');
+            if(btn) btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Menghapus...';
+            
+            const res = await fetch(`${apiBase}/api/applicants/cleanup`, {
+                method: 'DELETE',
+                headers: { 'Authorization': 'Bearer ' + localStorage.getItem('adminToken') }
+            });
+            const data = await res.json();
+            
+            if(data.success) {
+                Swal.fire({
+                    title: 'Berhasil!',
+                    text: data.message,
+                    icon: 'success'
+                }).then(() => {
+                    window.location.reload();
+                });
+            } else {
+                Swal.fire('Gagal!', data.message, 'error');
+                if(btn) btn.innerHTML = '<i class="fa-solid fa-trash-can"></i> Bersihkan Semua Arsip';
+            }
+        } catch(e) {
+            console.error(e);
+            Swal.fire('Error!', 'Terjadi kesalahan jaringan.', 'error');
+            const btn = document.getElementById('btnCleanupArchives');
+            if(btn) btn.innerHTML = '<i class="fa-solid fa-trash-can"></i> Bersihkan Semua Arsip';
+        }
+    }; // end DOMContentLoaded
+</script>
+</body>
+</html>
+

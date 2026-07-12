@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="google" content="notranslate">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="view-transition" content="same-origin">
+    <title>Keputusan Rekrutmen - PotraCrew Admin</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" href="../assets/img/logo.png" type="image/png">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome (Icons) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Bootstrap Grid (Only Grid & Utilities, UI is Custom) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap-grid.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap-utilities.min.css" rel="stylesheet">
+    
+    <!-- Custom Admin CSS (Shadcn Enterprise Style) -->
+    <link rel="stylesheet" href="../assets/css/admin.css">
+</head>
+<body>
+
+<div class="admin-layout">
+    <!-- Mesh Gradient Background -->
+    <div class="mesh-bg">
+        <div class="bg-shape shape-1"></div>
+        <div class="bg-shape shape-2"></div>
+        <div class="bg-shape shape-3"></div>
+    </div>
+    <!-- Overlay for mobile sidebar -->
+    <div id="sidebarOverlay" class="position-fixed top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 z-3 d-none"></div>
+
+    <!-- 1. Left Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <a href="#" class="sidebar-logo">
+                <img src="../assets/img/logo.png" alt="PotraCrew Logo">
+                Potra<span>Crew</span>
+            </a>
+        </div>
+        
+        <div class="sidebar-content">
+            <div class="sidebar-section-title">Rekrutmen</div>
+            <a href="index.html" class="sidebar-nav-item">
+                <i class="fa-solid fa-house"></i> Dashboard
+            </a>
+            <a href="data_pelamar.html" class="sidebar-nav-item">
+                <i class="fa-solid fa-users"></i> Data Pelamar
+            </a>
+            <a href="penilaian.html" class="sidebar-nav-item">
+                <i class="fa-solid fa-clipboard-user"></i> Penilaian Wawancara
+            </a>
+            
+            <div class="sidebar-section-title">Sistem Penunjang Keputusan (SAW)</div>
+            <a href="master_kriteria.html" class="sidebar-nav-item">
+                <i class="fa-solid fa-layer-group"></i> Kriteria & Bobot
+            </a>
+            <a href="perhitungan.html" class="sidebar-nav-item">
+                <i class="fa-solid fa-calculator"></i> Perhitungan SAW
+            </a>
+            <a href="keputusan.html" class="sidebar-nav-item active">
+                <i class="fa-solid fa-medal"></i> Keputusan Rekrutmen
+            </a>
+            
+        </div>
+        
+        <div class="sidebar-footer">
+<a href="login.html" class="sidebar-nav-item text-danger">
+                <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+            </a>
+        </div>
+    </aside>
+
+    <!-- 2. Main Wrapper -->
+    <main class="main-wrapper">
+        <!-- Top Navigation -->
+        <header class="topbar">
+            <div class="d-flex align-items-center gap-3">
+                <button class="icon-btn mobile-menu-btn" id="mobileMenuBtn" aria-label="Toggle Mobile Menu">
+                    <i class="fa-solid fa-bars" aria-hidden="true"></i>
+                </button>
+                <div class="breadcrumb-nav d-none d-md-flex">
+                    <span class="text-muted">PotraCrew</span>
+                    <i class="fa-solid fa-chevron-right text-xs opacity-50"></i>
+                    <span class="current">Keputusan Rekrutmen</span>
+                </div>
+            </div>
+            
+            <div class="topbar-actions">
+                <!-- Search removed for SAW section -->
+<div class="profile-avatar" title="Administrator">A</div>
+            </div>
+        </header>
+
+
+
+        <!-- Content Area -->
+        <div class="content-area config-page">
+            
+            <div class="page-header d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-4 mb-4">
+                <div class="flex-grow-1">
+                    <h1 class="page-title">Keputusan Rekrutmen</h1>
+                    <p class="page-description m-0">Tinjau hasil rekomendasi Sistem Pendukung Keputusan dan tetapkan keputusan akhir terhadap setiap pelamar.</p>
+                </div>
+            </div>
+
+            <!-- Information Alert -->
+            <div class="s-alert mb-4 info-alert">
+                <i class="fa-solid fa-circle-info text-primary mt-1"></i>
+                <div class="text-sm">
+                    <strong>Penting:</strong> Metode SAW digunakan sebagai rekomendasi (Decision Support). Keputusan akhir perekrutan mutlak tetap berada di tangan Owner Potra Photobooth.
+                </div>
+            </div>
+
+            <!-- Summary Cards -->
+            <div class="row row-cols-2 row-cols-md-3 row-cols-xl-5 g-4 mb-4">
+                <!-- Total Pelamar -->
+                <div class="col">
+                    <div class="s-card card-static p-4 h-100">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h3 class="text-xs font-semibold text-muted text-uppercase m-0">Total Pelamar</h3>
+                            <i class="fa-solid fa-users text-muted opacity-50"></i>
+                        </div>
+                        <div class="font-bold text-3xl" id="sumTotal">0</div>
+                    </div>
+                </div>
+                <!-- Rekomendasi -->
+                <div class="col">
+                    <div class="s-card card-static p-4 h-100">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h3 class="text-xs font-semibold text-success text-uppercase m-0">Rekomendasi</h3>
+                            <i class="fa-solid fa-star text-success opacity-50"></i>
+                        </div>
+                        <div class="font-bold text-3xl text-success" id="sumRek">0</div>
+                    </div>
+                </div>
+                <!-- Diterima -->
+                <div class="col">
+                    <div class="s-card card-static p-4 h-100 bg-success-subtle border-success-subtle">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h3 class="text-xs font-semibold text-success text-uppercase m-0">Diterima</h3>
+                            <i class="fa-solid fa-user-check text-success opacity-75"></i>
+                        </div>
+                        <div class="font-bold text-3xl text-success" id="sumTerima">0</div>
+                    </div>
+                </div>
+                <!-- Ditolak -->
+                <div class="col">
+                    <div class="s-card card-static p-4 h-100 bg-danger-subtle border-danger-subtle">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h3 class="text-xs font-semibold text-danger text-uppercase m-0">Ditolak</h3>
+                            <i class="fa-solid fa-user-xmark text-danger opacity-75"></i>
+                        </div>
+                        <div class="font-bold text-3xl text-danger" id="sumTolak">0</div>
+                    </div>
+                </div>
+                <!-- Menunggu -->
+                <div class="col">
+                    <div class="s-card card-static p-4 h-100 border-l-warning">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h3 class="text-xs font-semibold text-warning text-uppercase m-0">Menunggu</h3>
+                            <i class="fa-regular fa-hourglass-half text-warning opacity-75"></i>
+                        </div>
+                        <div class="font-bold text-3xl text-warning" id="sumTunggu">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Table -->
+            <div class="s-card card-static mb-5">
+                <div class="s-card-content p-0">
+                    <div class="s-table-wrapper border-none">
+                        <table class="s-table">
+                            <thead>
+                                <tr>
+                                    <th width="80" class="text-center">Rank</th>
+                                    <th>Nama Pelamar</th>
+                                    <th class="text-center">Nilai SAW</th>
+                                    <th class="text-center">Rekomendasi Sistem</th>
+                                    <th class="text-center">Keputusan Akhir</th>
+                                    <th width="100" class="text-center">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbodyKeputusan">
+                                <!-- Data rendered by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Back to Dashboard -->
+            <div class="d-flex justify-content-center mt-3 mb-5">
+                <a href="index.html" class="s-btn s-btn-outline s-btn-lg rounded-pill px-5 shadow-sm">
+                    <i class="fa-solid fa-arrow-left me-2"></i> Kembali ke Dashboard
+                </a>
+            </div>
+        </div> <!-- End Content Area -->
+
+        <!-- RIGHT DRAWER -->
+        <div class="drawer-overlay" id="drawerDetail" onclick="closeDrawer(event)">
+            <div class="drawer-panel" onclick="event.stopPropagation()">
+                <div class="drawer-header d-flex justify-content-between align-items-center p-4 border-bottom">
+                    <h2 class="m-0 text-lg font-bold">Detail Kandidat</h2>
+                    <button class="icon-btn" onclick="closeDrawer()" aria-label="Tutup Drawer"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+                
+                <div class="drawer-body p-4 overflow-y-auto drawer-body-h">
+                    <!-- Profile Header -->
+                    <div class="d-flex flex-column align-items-center text-center mb-4 pb-4 border-bottom">
+                        <div class="winner-avatar mb-3 avatar-lg" id="drwAvatar">?</div>
+                        <h3 class="font-bold text-xl mb-1" id="drwName">-</h3>
+                        <div class="text-muted text-sm mb-2" id="drwContact">email@domain.com � 0812xxxx</div>
+                        <div id="drwSystemBadge"></div>
+                    </div>
+                    
+                    <!-- Ranking & Score -->
+                    <div class="row g-3 mb-4">
+                        <div class="col-6">
+                            <div class="bg-muted rounded p-3 text-center">
+                                <div class="text-xs text-muted text-uppercase mb-1">Peringkat</div>
+                                <div class="font-bold text-xl" id="drwRank">-</div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="bg-primary-subtle rounded p-3 text-center">
+                                <div class="text-xs text-primary text-uppercase mb-1">Nilai Akhir SAW</div>
+                                <div class="font-bold text-xl text-primary" id="drwScore">-</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Interview Details -->
+                    <h4 class="font-bold text-sm text-muted text-uppercase mb-3 mt-4">Hasil Penilaian Interview Mentah</h4>
+                    <div class="bg-muted rounded p-3 mb-4">
+                        <table class="w-100 text-sm" id="drwInterviewTable">
+                            <!-- Injected -->
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Footer Actions -->
+                <div class="drawer-footer p-4 border-top bg-card" id="drwFooter">
+                    <!-- Injected Buttons based on state -->
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL PREVIEW KEPUTUSAN -->
+        <div class="dialog-overlay" id="modalEmail">
+            <div class="dialog-box dialog-box-md">
+                <div class="dialog-header">
+                    <h2 class="dialog-title" id="emailTitle">Konfirmasi Keputusan</h2>
+                    <button class="icon-btn dialog-close" onclick="closeModal('modalEmail')" aria-label="Tutup Dialog">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <div class="dialog-content text-center py-4">
+                    <div id="emailSubject" class="text-muted mb-2">Apakah Anda yakin ingin memproses keputusan ini?</div>
+                    <div class="font-bold text-lg" id="emailBody">-</div>
+                </div>
+                <div class="dialog-footer d-flex gap-3 pb-4 px-4 pt-2">
+                    <button class="s-btn s-btn-outline flex-grow-1" onclick="closeModal('modalEmail')">Batal</button>
+                    <button class="s-btn s-btn-primary flex-grow-1" id="btnSendEmail" onclick="executeEmail()">
+                        <i class="fa-solid fa-check me-2"></i> Ya, Lanjutkan
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+    </main>
+</div>
+
+<!-- Custom Admin JS -->
+<script src="../assets/js/admin.js"></script>
+<!-- Keputusan JS -->
+<script src="../assets/js/keputusan.js"></script>
+
+</body>
+</html>
+

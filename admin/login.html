@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="google" content="notranslate">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal Administrator - PotraCrew</title>
+    <link rel="icon" href="../assets/img/logo.png" type="image/png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- SweetAlert2 -->
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        /* ============================================
+           POTRACREW ADMIN LOGIN — ENTERPRISE UI
+           ============================================ */
+
+        :root {
+            --bg-canvas: #ffffff;
+            --surface: #ffffff;
+            --text-primary: #111827;
+            --text-secondary: #6B7280;
+            --text-tertiary: #9CA3AF;
+            --accent: #2563EB;
+            --accent-hover: #1D4ED8;
+            --border-light: #F3F4F6;
+            --border-focus: rgba(37, 99, 235, 0.3);
+            --input-bg: #F9FAFB;
+            
+            --shadow-card: 0 40px 80px rgba(0, 0, 0, 0.04), 0 2px 10px rgba(0, 0, 0, 0.02);
+            --radius-card: 24px;
+            --radius-input: 10px;
+            --radius-btn: 10px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-canvas);
+            color: var(--text-primary);
+            height: 100vh;
+            overflow: hidden; /* Force static page, no scrollbar */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            transition: opacity 0.4s ease-out;
+            opacity: 1;
+        }
+
+        body.page-exit {
+            opacity: 0 !important;
+        }
+
+        /* ═══════════════════════════════
+           ATMOSPHERE & BACKGROUND
+           ═══════════════════════════════ */
+        
+        .ambient-light {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 800px; height: 800px;
+            background: radial-gradient(circle, rgba(37, 99, 235, 0.015) 0%, transparent 60%);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .watermark {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 500px; height: 500px;
+            opacity: 0.015; /* Ultra subtle */
+            z-index: 0;
+            pointer-events: none;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .watermark svg { width: 100%; height: 100%; fill: #111827; }
+
+        /* ═══════════════════════════════
+           MAIN LAYOUT
+           ═══════════════════════════════ */
+        
+        .layout-wrapper {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 24px;
+            animation: appEntrance 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            opacity: 0;
+            transform: translateY(12px);
+        }
+
+        @keyframes appEntrance {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive Scale down to fit standard laptops perfectly */
+        .scale-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            transform-origin: center center;
+            transform: scale(1.15); /* Increased base scale for larger elements */
+        }
+
+        /* ── Header Area ── */
+        .brand-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 32px;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            margin-bottom: 24px;
+            /* Minor optical tweak, not too aggressive */
+            transform: translateX(-6px);
+        }
+        
+        .logo-mark {
+            display: flex; align-items: center; justify-content: center;
+        }
+        .logo-mark img { width: 48px; height: 48px; filter: grayscale(100%) brightness(0); opacity: 0.9; }
+        
+        .logo-text {
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+        }
+        .logo-text span { color: var(--accent); }
+
+        .sys-label {
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.25em;
+            color: var(--text-tertiary);
+            margin-bottom: 8px;
+        }
+
+        .sys-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
+        }
+
+        .sys-subtitle {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 10px;
+            text-align: center;
+            max-width: 340px;
+            line-height: 1.5;
+        }
+
+        /* ── The Card ── */
+        .auth-card {
+            position: relative;
+            background: var(--surface);
+            border: 1px solid #E5E7EB;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 420px; /* Tighter card for better input proportions */
+            padding: 40px;
+            margin-bottom: 32px;
+            /* Refined, more natural shadow */
+            box-shadow: 
+                0 20px 40px -10px rgba(0, 0, 0, 0.08), 
+                0 4px 12px -2px rgba(0, 0, 0, 0.04),
+                inset 0 1px 0 rgba(255, 255, 255, 1);
+        }
+
+        /* ── Form Fields (No Icons) ── */
+        .f-group { margin-bottom: 24px; position: relative; }
+        
+        .f-label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        .f-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .f-input {
+            width: 100%;
+            background: var(--input-bg);
+            border: 1px solid transparent;
+            border-radius: var(--radius-input);
+            padding: 14px 16px;
+            font-size: 1rem;
+            color: var(--text-primary);
+            font-family: inherit;
+            outline: none;
+            transition: all 0.25s ease;
+        }
+        
+        /* Subtle border on normal, strong border on focus */
+        .f-input { border-color: rgba(0, 0, 0, 0.1); }
+        .f-input:hover { background: #F3F4F6; }
+        
+        .f-input:focus { 
+            background: var(--surface);
+            border-color: var(--accent);
+            box-shadow: 0 0 0 4px var(--border-focus); 
+        }
+
+        .f-input::placeholder { color: var(--text-tertiary); font-weight: 400; }
+        
+        .pointer-none { pointer-events: none !important; }
+
+        /* Hide native eye icons in Edge and Chrome */
+        input::-ms-reveal,
+        input::-ms-clear {
+            display: none !important;
+        }
+        input::-webkit-credentials-auto-fill-button {
+            visibility: hidden;
+            display: none !important;
+        }
+
+        /* Password Toggle */
+        .f-toggle {
+            position: absolute;
+            right: 12px;
+            z-index: 10;
+            background: none;
+            border: none;
+            padding: 4px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer;
+            color: var(--text-tertiary);
+            transition: color 0.2s ease;
+        }
+        .f-toggle:hover { color: var(--text-secondary); }
+        .f-toggle svg { width: 18px; height: 18px; fill: currentColor; }
+
+        /* ── Options Row ── */
+        .f-opts {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 32px;
+        }
+
+        .f-check {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .f-check input[type="checkbox"] {
+            appearance: none;
+            width: 18px; height: 18px;
+            border: 1px solid rgba(0,0,0,0.15);
+            border-radius: 4px;
+            background: var(--surface);
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+        .f-check input[type="checkbox"]:checked {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+        .f-check input[type="checkbox"]:checked::after {
+            content: '';
+            position: absolute;
+            top: 3px; left: 6px;
+            width: 4px; height: 8px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
+        }
+        .f-check label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        .f-link {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        .f-link:hover { color: var(--text-primary); }
+
+        .link-with-icon {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        .link-with-icon svg {
+            width: 16px;
+            height: 16px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+        }
+
+        /* ── Submit Button ── */
+        .f-submit {
+            width: 100%;
+            background: var(--accent);
+            color: #ffffff;
+            border: none;
+            border-radius: var(--radius-btn);
+            padding: 14px;
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15), 0 2px 4px rgba(37, 99, 235, 0.1);
+            transition: all 0.2s ease;
+        }
+        
+        .f-submit:hover {
+            background: var(--accent-hover);
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.2), 0 4px 8px rgba(37, 99, 235, 0.15);
+        }
+        
+        /* Tactual feedback on press */
+        .f-submit:active {
+            transform: scale(0.98);
+            box-shadow: 0 1px 2px rgba(37, 99, 235, 0.1);
+        }
+
+        .f-submit svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; transition: transform 0.2s ease; }
+        .f-submit:hover svg { transform: translateX(3px); }
+
+        #icon-eye-off { display: none; }
+
+        /* Loading Spinner */
+        .spinner {
+            width: 16px; height: 16px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: #ffffff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ── Footer / Back ── */
+        .sys-footer {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .f-back {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            color: var(--text-tertiary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+        .f-back svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2; transition: transform 0.2s ease; }
+        .f-back:hover { color: var(--text-secondary); }
+        .f-back:hover svg { transform: translateX(-3px); }
+
+        .copyright {
+            font-size: 0.75rem;
+            color: var(--text-tertiary);
+        }
+
+        .auth-bottom-opts {
+            text-align: center;
+            margin-top: 1.75rem;
+            font-size: 0.925rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+        
+        .auth-bottom-opts-link {
+            font-weight: 500;
+        }
+
+        .auth-view {
+            display: none;
+            animation: fadeSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        .auth-view.active {
+            display: block;
+        }
+        .auth-view.fade-out {
+            display: block;
+            animation: fadeSlideOut 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        @keyframes fadeSlideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes fadeSlideOut {
+            from { opacity: 1; transform: translateX(0); }
+            to { opacity: 0; transform: translateX(-20px); }
+        }
+        @keyframes fadeSlideInBack {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes fadeSlideOutBack {
+            from { opacity: 1; transform: translateX(0); }
+            to { opacity: 0; transform: translateX(20px); }
+        }
+
+        .auth-view.slide-in-back {
+            display: block;
+            animation: fadeSlideInBack 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+        .auth-view.slide-out-back {
+            display: block;
+            animation: fadeSlideOutBack 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        .f-submit.loading {
+            pointer-events: none;
+            opacity: 0.9;
+        }
+        .f-submit.loading span, .f-submit.loading svg {
+            opacity: 0;
+        }
+        .f-submit.loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            left: 50%;
+            top: 50%;
+            margin-top: -10px;
+            margin-left: -10px;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .success-icon-wrapper {
+            width: 64px;
+            height: 64px;
+            background-color: rgba(16, 185, 129, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem auto;
+            color: #10B981;
+        }
+        .success-icon-wrapper svg {
+            width: 32px;
+            height: 32px;
+            stroke-width: 2.5;
+        }
+        .text-center-box {
+            text-align: center;
+        }
+        .text-center-box h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-primary);
+        }
+        .text-center-box p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1.5rem;
+        }
+
+        .pwd-req-panel {
+            position: absolute;
+            left: calc(100% + 24px);
+            top: 50%;
+            transform: translateY(-50%) translateX(-10px);
+            width: 260px;
+            background: var(--surface);
+            border: 1px solid #E5E7EB;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .auth-view.active .pwd-req-panel {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(-50%) translateX(0);
+        }
+        
+        .pwd-req-panel h4 {
+            font-size: 0.85rem;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .pwd-req-list {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .pwd-req-list li {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: color 0.2s ease;
+        }
+        
+        .pwd-req-list li svg {
+            width: 14px;
+            height: 14px;
+            fill: none;
+            stroke: var(--text-tertiary);
+            stroke-width: 3;
+            transition: stroke 0.2s ease;
+        }
+        
+        .pwd-req-list li.valid {
+            color: var(--text-primary);
+        }
+        
+        .pwd-req-list li.valid svg {
+            stroke: #10B981;
+        }
+        
+        @media (max-width: 850px) {
+            .pwd-req-panel {
+                position: relative;
+                left: 0;
+                top: 0;
+                transform: none;
+                width: 100%;
+                margin-top: -12px;
+                margin-bottom: 24px;
+                padding: 16px;
+                box-shadow: none;
+                background: var(--input-bg);
+            }
+            .auth-view.active .pwd-req-panel {
+                transform: none;
+            }
+        }
+
+        /* ── Responsiveness ── */
+        @media (max-height: 900px) { .scale-container { transform: scale(1.05); } }
+        @media (max-height: 800px) { .scale-container { transform: scale(0.95); } .layout-wrapper { padding: 24px; } }
+        @media (max-height: 700px) { .scale-container { transform: scale(0.85); } .layout-wrapper { padding: 16px 24px; } }
+        @media (max-height: 600px) { .scale-container { transform: scale(0.75); } .layout-wrapper { padding: 10px 24px; } }
+        
+        @media (max-width: 520px) {
+            .auth-card { padding: 40px 24px; border-radius: 16px; }
+            .sys-title { font-size: 1.8rem; }
+            .scale-container { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Ambient Background Elements -->
+    <div class="ambient-light"></div>
+    <div class="watermark">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <path d="M50 150V50H110C132.091 50 150 67.9086 150 90C150 112.091 132.091 130 110 130H80V150H50ZM80 100H110C115.523 100 120 95.5228 120 90C120 84.4772 115.523 80 110 80H80V100Z" />
+        </svg>
+    </div>
+
+    <!-- Main Layout -->
+    <div class="layout-wrapper">
+        <div class="scale-container">
+            
+            <!-- Header -->
+            <div class="brand-header">
+                <div class="logo-container">
+                    <div class="logo-mark">
+                        <img src="../assets/img/logo.png" alt="PotraCrew Logo">
+                    </div>
+                    <div class="logo-text">Potra<span>Crew</span></div>
+                </div>
+                <div class="sys-label">Internal Recruitment System</div>
+                <h1 class="sys-title">Selamat Datang</h1>
+                <p class="sys-subtitle">Silakan masuk menggunakan akun Administrator. Akses selain pihak berwenang tidak diperkenankan.</p>
+            </div>
+
+            <!-- Authenticaton Card -->
+            <div class="auth-card">
+                <div class="auth-view-container">
+                    
+                    <!-- View 1: Login -->
+                    <div id="view-login" class="auth-view active">
+                        <form id="portalLoginForm" novalidate>
+                            <div class="f-group">
+                                <label class="f-label" for="email">Alamat Email</label>
+                                <div class="f-input-wrapper">
+                                    <input type="email" class="f-input" id="email" placeholder="contoh@potracrew.com" required autocomplete="email">
+                                </div>
+                            </div>
+                            
+                            <div class="f-group">
+                                <label class="f-label" for="password">Kata Sandi</label>
+                                <div class="f-input-wrapper">
+                                    <input type="password" class="f-input f-input--pwd" id="password" placeholder="••••••••" required autocomplete="current-password">
+                                    
+                                    <button type="button" class="f-toggle" id="togglePwd" aria-label="Tampilkan kata sandi" onclick="togglePasswordVisibility()">
+                                        <!-- Eye Icon SVG -->
+                                        <svg id="icon-eye" viewBox="0 0 24 24" class="pointer-none">
+                                            <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                                        </svg>
+                                        <!-- Eye Off Icon SVG (hidden by default) -->
+                                        <svg id="icon-eye-off" viewBox="0 0 24 24" class="pointer-none">
+                                            <path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2.01 3.87l2.68 2.68C3.06 7.83 1.77 9.53 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l4.2 4.2 1.41-1.41L3.42 2.45 2.01 3.87zm7.5 7.5l2.61 2.61c-.04.14-.06.27-.06.4 0 1.66 1.34 3 3 3 .15 0 .28-.02.42-.05l2.6 2.6c-.85.39-1.8.62-2.8.62-2.76 0-5-2.24-5-5 0-1.01.23-1.96.63-2.81v.03z"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="f-opts">
+                                <div class="f-check">
+                                    <input type="checkbox" id="rememberMe">
+                                    <label for="rememberMe">Ingat sesi saya</label>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="f-submit" id="btnSubmit">
+                                <span>Masuk ke Dashboard</span>
+                                <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                            </button>
+                            
+                            <div class="auth-bottom-opts">
+                                <a href="#" id="linkToForgot" class="f-link auth-bottom-opts-link">Lupa kata sandi?</a>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- View 2: Forgot Password -->
+                    <div id="view-forgot" class="auth-view">
+                        <form id="forgotPasswordForm" novalidate>
+                            <div class="f-group">
+                                <label class="f-label" for="forgotEmail">Email Administrator</label>
+                                <div class="f-input-wrapper">
+                                    <input type="email" class="f-input" id="forgotEmail" placeholder="contoh@potracrew.com" required autocomplete="email">
+                                </div>
+                            </div>
+
+                            <div class="f-group">
+                                <label class="f-label" for="newPassword">Password Baru</label>
+                                <div class="f-input-wrapper">
+                                    <input type="password" class="f-input" id="newPassword" placeholder="••••••••" required>
+                                </div>
+                            </div>
+                            
+                            <div class="f-group">
+                                <label class="f-label" for="confirmPassword">Konfirmasi Password</label>
+                                <div class="f-input-wrapper">
+                                    <input type="password" class="f-input" id="confirmPassword" placeholder="••••••••" required>
+                                </div>
+                            </div>
+                            
+                            <div class="pwd-req-panel">
+                                <h4>Persyaratan Password</h4>
+                                <ul class="pwd-req-list" id="pwdReqList">
+                                    <li id="req-length"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg> 8-12 karakter</li>
+                                    <li id="req-number"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg> Minimal 1 angka</li>
+                                    <li id="req-upper"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg> Minimal 1 huruf kapital</li>
+                                    <li id="req-special"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg> Minimal 1 simbol khusus</li>
+                                </ul>
+                            </div>
+
+                            <button type="submit" class="f-submit" id="btnForgotSubmit">
+                                <span>Simpan Password Baru</span>
+                                <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                            </button>
+                            
+                            <div class="auth-bottom-opts">
+                                <a href="#" id="linkBackToLogin" class="f-link auth-bottom-opts-link link-with-icon">
+                                    <svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                                    Kembali ke Login
+                                </a>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- View 3: Success State -->
+                    <div id="view-success" class="auth-view">
+                        <div class="text-center-box">
+                            <div class="success-icon-wrapper">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                            </div>
+                            <h2>Password Berhasil Diubah</h2>
+                            <p>Password akun Administrator Anda telah berhasil diperbarui.<br><br>Silakan kembali ke menu login untuk masuk menggunakan password baru Anda.</p>
+                            
+                            <button type="button" class="f-submit" id="btnSuccessToLogin">
+                                <span>Kembali ke Login</span>
+                                <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="sys-footer">
+                <a href="../index.html" class="f-back">
+                    <svg viewBox="0 0 24 24"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                    Kembali ke website
+                </a>
+                <div class="copyright">&copy; 2026 Potra Photobooth. All rights reserved.</div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function togglePasswordVisibility() {
+            const pwdInput = document.getElementById('password');
+            const iconEye = document.getElementById('icon-eye');
+            const iconEyeOff = document.getElementById('icon-eye-off');
+            const togglePwd = document.getElementById('togglePwd');
+
+            if (!pwdInput || !iconEye || !iconEyeOff || !togglePwd) return;
+
+            const isPassword = pwdInput.type === 'password';
+            pwdInput.type = isPassword ? 'text' : 'password';
+            togglePwd.setAttribute('aria-label', isPassword ? 'Sembunyikan kata sandi' : 'Tampilkan kata sandi');
+            
+            if (isPassword) {
+                iconEye.style.display = 'none';
+                iconEyeOff.style.display = 'block';
+            } else {
+                iconEye.style.display = 'block';
+                iconEyeOff.style.display = 'none';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // Smooth Page Transition back to Website
+            const backLink = document.querySelector('.f-back');
+            if(backLink) {
+                backLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const href = this.getAttribute('href');
+                    document.body.classList.add('page-exit');
+                    setTimeout(() => {
+                        window.location.href = href;
+                    }, 350);
+                });
+            }
+
+            // Form Submit Simulation
+            const form = document.getElementById('portalLoginForm');
+            const btnSubmit = document.getElementById('btnSubmit');
+            
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const originalHtml = btnSubmit.innerHTML;
+                const originalWidth = btnSubmit.offsetWidth;
+                
+                // Set loading state
+                btnSubmit.disabled = true;
+                btnSubmit.style.width = `${originalWidth}px`;
+                btnSubmit.innerHTML = '<div class="spinner"></div><span>Memverifikasi...</span>';
+                
+                try {
+                    const usernameVal = document.getElementById('email').value;
+                    const passwordVal = document.getElementById('password').value;
+
+                    
+                    const apiBase = (window.location.protocol === 'file:' || window.location.port === '5500' || window.location.port === '5501') ? 'http://localhost:3000' : '';
+                    const res = await fetch(`${apiBase}/api/auth/login`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ username: usernameVal, password: passwordVal })
+                    });
+                    
+                    const isJson = res.headers.get('content-type')?.includes('application/json');
+                    let data = null;
+                    if (isJson) {
+                        const text = await res.text();
+                        if (text) data = JSON.parse(text);
+                    }
+                    
+                    if (!res.ok) {
+                        throw new Error(data && data.message ? data.message : 'Koneksi ke server gagal (Pastikan database MySQL menyala dan server node.js berjalan).');
+                    }
+                    
+                    if (data && data.success) {
+                        // Simpan token
+                        localStorage.setItem('adminToken', data.data.token);
+                        localStorage.setItem('adminData', JSON.stringify(data.data.user));
+                        
+                        btnSubmit.innerHTML = '<svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:currentColor;stroke-width:2;fill:none;stroke-linecap:round;stroke-linejoin:round;"><polyline points="20 6 9 17 4 12"></polyline></svg><span>Autentikasi Berhasil</span>';
+                        btnSubmit.style.background = '#10B981';
+                        btnSubmit.style.boxShadow = '0 4px 14px rgba(16, 185, 129, 0.3)';
+                        
+                        setTimeout(() => {
+                            window.location.href = 'index.html';
+                        }, 1000);
+                    } else {
+                        throw new Error(data.message || 'Login gagal');
+                    }
+                } catch (error) {
+                    btnSubmit.disabled = false;
+                    btnSubmit.innerHTML = originalHtml;
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire({
+                            title: 'Gagal',
+                            text: error.message,
+                            icon: 'error',
+                            confirmButtonColor: '#2563EB'
+                        });
+                    } else {
+                        alert(error.message);
+                    }
+                }
+            });
+            // View Transition Logic
+            const sysTitle = document.querySelector('.sys-title');
+            const sysSubtitle = document.querySelector('.sys-subtitle');
+            if (sysTitle) sysTitle.style.transition = 'opacity 0.2s ease';
+            if (sysSubtitle) sysSubtitle.style.transition = 'opacity 0.2s ease';
+
+            const views = {
+                'view-login': { title: 'Selamat Datang', subtitle: 'Silakan masuk menggunakan akun Administrator. Akses selain pihak berwenang tidak diperkenankan.' },
+                'view-forgot': { title: 'Reset Password', subtitle: 'Masukkan email administrator Anda dan buat password baru untuk akun ini.' },
+                'view-success': { title: '', subtitle: '' }
+            };
+
+            function switchView(fromId, toId, isBack = false) {
+                const fromView = document.getElementById(fromId);
+                const toView = document.getElementById(toId);
+                
+                fromView.style.animation = ''; // reset inline
+                toView.style.animation = '';
+                
+                fromView.classList.remove('active', 'slide-in-back');
+                fromView.classList.add(isBack ? 'slide-out-back' : 'fade-out');
+                
+                if (sysTitle && sysSubtitle) {
+                    sysTitle.style.opacity = '0';
+                    sysSubtitle.style.opacity = '0';
+                }
+                
+                setTimeout(() => {
+                    fromView.classList.remove('fade-out', 'slide-out-back');
+                    toView.classList.add('active');
+                    toView.style.animation = isBack ? 'fadeSlideInBack 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards' : 'fadeSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards';
+                    
+                    if (sysTitle && sysSubtitle) {
+                        const t = views[toId].title;
+                        const s = views[toId].subtitle;
+                        
+                        sysTitle.textContent = t;
+                        sysSubtitle.textContent = s;
+                        
+                        sysTitle.style.display = t === '' ? 'none' : 'block';
+                        sysSubtitle.style.display = s === '' ? 'none' : 'block';
+                        
+                        setTimeout(() => {
+                            sysTitle.style.opacity = '1';
+                            sysSubtitle.style.opacity = '1';
+                        }, 50);
+                    }
+                }, 300);
+            }
+
+            document.getElementById('linkToForgot').addEventListener('click', (e) => {
+                e.preventDefault();
+                switchView('view-login', 'view-forgot', false);
+            });
+
+            document.getElementById('linkBackToLogin').addEventListener('click', (e) => {
+                e.preventDefault();
+                switchView('view-forgot', 'view-login', true);
+            });
+
+            document.getElementById('btnSuccessToLogin').addEventListener('click', (e) => {
+                switchView('view-success', 'view-login', true);
+            });
+
+            const forgotForm = document.getElementById('forgotPasswordForm');
+            const btnForgotSubmit = document.getElementById('btnForgotSubmit');
+            const newPassword = document.getElementById('newPassword');
+            const reqLength = document.getElementById('req-length');
+            const reqNumber = document.getElementById('req-number');
+            const reqUpper = document.getElementById('req-upper');
+            const reqSpecial = document.getElementById('req-special');
+
+            if (newPassword) {
+                newPassword.addEventListener('input', (e) => {
+                    const val = e.target.value;
+                    if (val.length >= 8 && val.length <= 12) reqLength.classList.add('valid');
+                    else reqLength.classList.remove('valid');
+
+                    if (/\d/.test(val)) reqNumber.classList.add('valid');
+                    else reqNumber.classList.remove('valid');
+
+                    if (/[A-Z]/.test(val)) reqUpper.classList.add('valid');
+                    else reqUpper.classList.remove('valid');
+
+                    if (/[!@#$%^&*(),.?":{}|<>]/.test(val)) reqSpecial.classList.add('valid');
+                    else reqSpecial.classList.remove('valid');
+                });
+            }
+            
+            forgotForm.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                btnForgotSubmit.classList.add('loading');
+                
+                try {
+                    const res = await fetch('/api/auth/forgot-password', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({}) // API currently hardcodes email sending to admin
+                    });
+                    
+                    const data = await res.json();
+                    
+                    if (data.success) {
+                        btnForgotSubmit.classList.remove('loading');
+                        switchView('view-forgot', 'view-success', false);
+                        forgotForm.reset();
+                    } else {
+                        throw new Error(data.message || 'Gagal mengirim instruksi reset');
+                    }
+                } catch (error) {
+                    btnForgotSubmit.classList.remove('loading');
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire({
+                            title: 'Gagal',
+                            text: error.message,
+                            icon: 'error',
+                            confirmButtonColor: '#2563EB'
+                        });
+                    } else {
+                        alert(error.message);
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+
